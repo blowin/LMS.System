@@ -1,4 +1,4 @@
-﻿namespace LMS.System.Domain;
+namespace LMS.System.Domain;
 
 public class Class1
 {

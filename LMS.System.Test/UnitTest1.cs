@@ -1,4 +1,4 @@
-﻿namespace LMS.System.Test;
+namespace LMS.System.Test;
 
 public class UnitTest1
 {
