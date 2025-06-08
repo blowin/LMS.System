@@ -1,0 +1,35 @@
+name: build
+
+on:
+  push:    
+    paths-ignore:
+    - 'README.md'
+    - '.github/**'
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: ['9.0.x']
+        
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+        fetch-depth: 0
+        
+    - name: Setup .NET ${{ matrix.version }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.version }}
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build "LMS.System.Blazor" --no-restore
+
+    - name: Test
+      run: dotnet test "LMS.System.Test" --no-restore --verbosity normal
