@@ -11,75 +11,118 @@
 ## **Технологии**  
 ### Основные:  
 - Blazor
-- Entity Framework Core (с Repository + Service паттерном)  
+- Entity Framework Core (с Service'ами)  
 - SQL Server / PostgreSQL  
-- JWT Bearer Authentication  
+- JWT Bearer Authentication (для авторизации внутри Blazor, через AuthenticationStateProvider)
 - FluentValidation  
 - Docker (опционально)  
 
 ### Дополнительные:  
-- Swagger/OpenAPI  
-- xUnit / NSubstitude
-- Serilog  
-- QuestPDF  
+- Serilog (логирование)
+- xUnit + NSubstitute (тестирование)
+- QuestPDF (экспорт в PDF)
+- CsvHelper или ClosedXML (экспорт в CSV/Excel)
 
 ---
 
 ## **Функционал бэкенда**  
 ### 1. Аутентификация и роли  
-- Регистрация/вход через JWT.  
-- Роли:  
-  - **Студент**: просмотр курсов, выполнение заданий, отслеживание прогресса.  
-  - **Преподаватель**: создание курсов, управление уроками, проверка заданий.  
-  - **Админ**: управление пользователями и курсами.  
+- Регистрация и вход с использованием JWT (в рамках Blazor Server)
+- Использование `AuthenticationStateProvider` для определения текущего пользователя и его ролей
+- Поддержка ролей:
+  - **Студент** — доступ к курсам, выполнение заданий, просмотр прогресса
+  - **Преподаватель** — создание и управление курсами, проверка заданий
+  - **Администратор** — управление пользователями и всеми курсами
 
 ### 2. Управление курсами  
-- Создание/редактирование курсов (название, описание, категория).  
-- Добавление уроков:  
-  - Текстовый контент.  
-  - Ссылки на внешние ресурсы.  
-  - Файлы (PDF, видео). (ОПЦИОНАЛЬНО)
-- Публикация/архивация курсов.  
+- Создание, редактирование, публикация и архивирование курсов
+- Возможность указать категорию курса
+- Уроки внутри курса (в порядке) с поддержкой:
+  - Текста
+  - Ссылок
+  - Файлов (PDF, видео) *(опционально)*
 
 ### 3. Задания и оценивание  
-- Преподаватели могут создавать:  
-  - Текстовые задания.  
-  - Тесты с вариантами ответов.  
-  - Задания с загрузкой файлов.  
-- Система проверки:  
-  - Автоматическая проверка тестов.  
-  - Ручная оценка преподавателем.  
-  - Обратная связь через комментарии.  
+- Преподаватели могут создавать задания:
+  - Текстовые ответы
+  - Тесты с вариантами
+  - Загрузку файлов
+- Проверка заданий:
+  - Автоматическая проверка тестов
+  - Ручная проверка с выставлением оценки
+  - Возможность добавить комментарий (обратную связь)
 
 ### 4. Прогресс студентов  
-- Отслеживание пройденных уроков.  
-- Статистика по оценкам и дедлайнам.  
-- Dashboard с общей успеваемостью (для фронтенда).  
+- Отслеживание завершенных уроков
+- Просмотр результатов по заданиям и тестам
+- Панель прогресса студента (для отображения в UI)
 
 ### 5. Дополнительные функции  
-- Уведомления о дедлайнах (Email/SignalR).  
-- Экспорт оценок в CSV/Excel.  
-- Поиск курсов (LINQ/Elasticsearch).  
+- Уведомления о дедлайнах (реализуется через Email)
+- Экспорт оценок в CSV или Excel
+- Поиск курсов (на основе LINQ-запросов, Elasticsearch — опционально) 
 
 ---
 
-## **Пример структуры API**  
-### 1. Курсы  
-- `GET /api/courses?page=1&pageSize=10` — получить список курсов с пагинацией  
-- `GET /api/courses/{id}` — получить детали курса  
-- `POST /api/courses` — создать курс *(только преподаватель/админ)*  
-- `PUT /api/courses/{id}` — обновить курс  
-- `DELETE /api/courses/{id}` — удалить курс  
+## Примеры сервисов и методов
 
-### 2. Пользователи  
-- `POST /api/auth/register` — регистрация.  
-- `POST /api/auth/login` — вход.  
-- `GET /api/users/{id}/progress` — прогресс студента.  
+### 1. `ICourseService`
+Сервис для управления курсами.
 
-### 3. Задания  
-- `POST /api/assignments` — создание задания (преподаватель).  
-- `POST /api/assignments/{id}/submit` — отправка решения (студент).  
-- `GET /api/assignments/{id}/results` — результаты выполнения.  
+```csharp
+Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken);
+Task<CourseByIdResponse?> GetCourseByIdAsync(Guid id, CancellationToken cancellationToken);
+Task<Guid> CreateCourseAsync(CreateCourseDto course, Guid instructorId, CancellationToken cancellationToken);
+Task UpdateCourseAsync(Guid id, UpdateCourseDto course, CancellationToken cancellationToken);
+Task DeleteCourseAsync(Guid id, CancellationToken cancellationToken);
+Task PublishCourseAsync(Guid id, CancellationToken cancellationToken);
+Task ArchiveCourseAsync(Guid id, CancellationToken cancellationToken);
+```
+
+### 2. `IUserService`
+Сервис для управления пользователями и прогрессом.
+
+```csharp
+Task<Guid> RegisterAsync(UserRegisterRequest request, CancellationToken cancellationToken);
+Task<string> LoginAsync(UserLoginRequest request, CancellationToken cancellationToken);
+Task<UserProgressResponse> GetUserProgressAsync(Guid userId, CancellationToken cancellationToken);
+Task<IPagedList<UserPageResponse>> GetUserPageAsync(UserPageRequest request, CancellationToken cancellationToken);
+```
+
+### 3. `IAssignmentService`
+Сервис для управления заданиями и отправками.
+
+```csharp
+Task<Guid> CreateAssignmentAsync(CreateAssignmentRequest request, CancellationToken cancellationToken);
+Task SubmitAssignmentAsync(SubmitAssignmentRequest request, CancellationToken cancellationToken);
+Task<AssignmentResultResponse> GetAssignmentResultAsync(AssignmentResultRequest request, CancellationToken cancellationToken);
+Task<IPagedList<AssignmentPageResponse>> GetAssignmentsByCoursePageAsync(AssignmentPageRequest request, CancellationToken cancellationToken);
+```
+
+### 4. `IProgressTrackingService`
+Сервис для отслеживания прогресса студента.
+
+```csharp
+Task MarkLessonCompletedAsync(MarkLessonCompletedRequest request, CancellationToken cancellationToken);
+Task<StudentDashboardResponse> GetStudentDashboardAsync(StudentDashboardRequest request, CancellationToken cancellationToken);
+```
+
+### 5. `INotificationService`
+Сервис для уведомлений.
+
+```csharp
+Task SendDeadlineReminderAsync(SendDeadlineReminderRequest request, CancellationToken cancellationToken);
+Task NotifyCoursePublishedAsync(NotifyCoursePublishedRequest request, CancellationToken cancellationToken);
+```
+
+---
+
+## Архитектура и структура проекта
+
+- **Сервисы (Domain Layer)**: логика обработки данных, взаимодействие с EF Core
+- **Инфраструктура (Infrastructure Layer)**: Специфичные реализации (например, работа с CSV, отпрвка почты)
+- **Компоненты Blazor (UI Layer)**: использование DI для взаимодействия с сервисами
+- **Авторизация**: через `AuthorizeView`, `AuthenticationStateProvider` и `[Authorize(Roles = "...")]`
 
 ---
 
