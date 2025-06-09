@@ -72,8 +72,8 @@
 ```csharp
 Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken);
 Task<CourseByIdResponse?> GetCourseByIdAsync(Guid id, CancellationToken cancellationToken);
-Task<Guid> CreateCourseAsync(CreateCourseDto course, Guid instructorId, CancellationToken cancellationToken);
-Task UpdateCourseAsync(Guid id, UpdateCourseDto course, CancellationToken cancellationToken);
+Task<Guid> CreateCourseAsync(CourseCreateRequest request, CancellationToken cancellationToken);
+Task UpdateCourseAsync(CourseUpdateRequest request, CancellationToken cancellationToken);
 Task DeleteCourseAsync(Guid id, CancellationToken cancellationToken);
 Task PublishCourseAsync(Guid id, CancellationToken cancellationToken);
 Task ArchiveCourseAsync(Guid id, CancellationToken cancellationToken);
