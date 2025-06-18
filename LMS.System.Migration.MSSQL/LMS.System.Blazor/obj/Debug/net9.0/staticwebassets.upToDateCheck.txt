@@ -1,0 +1,2 @@
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Blazor\wwwroot\favicon.ico
+wwwroot\favicon.ico

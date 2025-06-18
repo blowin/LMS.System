@@ -1,0 +1,16 @@
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.System.Migrations.MSSQL.csproj.AssemblyReference.cache
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.System.Migrations.MSSQL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.System.Migrations.MSSQL.AssemblyInfoInputs.cache
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.System.Migrations.MSSQL.AssemblyInfo.cs
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.System.Migrations.MSSQL.csproj.CoreCompileInputs.cache
+C:\Users\N.komkov\source\repos\LMS.System-master\WebApplication1\bin\Debug\net9.0\LMS.System.Migrations.MSSQL.deps.json
+C:\Users\N.komkov\source\repos\LMS.System-master\WebApplication1\bin\Debug\net9.0\LMS.System.Migrations.MSSQL.runtimeconfig.json
+C:\Users\N.komkov\source\repos\LMS.System-master\WebApplication1\bin\Debug\net9.0\LMS.System.Migrations.MSSQL.dll
+C:\Users\N.komkov\source\repos\LMS.System-master\WebApplication1\bin\Debug\net9.0\LMS.System.Migrations.MSSQL.pdb
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.Syst.1FDE7023.Up2Date
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.System.Migrations.MSSQL.dll
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\refint\LMS.System.Migrations.MSSQL.dll
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.System.Migrations.MSSQL.pdb
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.System.Migrations.MSSQL.genruntimeconfig.cache
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\ref\LMS.System.Migrations.MSSQL.dll
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Migration.MSSQL\obj\Debug\net9.0\LMS.System.Migrations.MSSQL.sourcelink.json

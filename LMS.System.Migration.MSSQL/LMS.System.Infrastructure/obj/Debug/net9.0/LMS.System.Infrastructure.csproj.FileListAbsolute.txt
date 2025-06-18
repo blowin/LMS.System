@@ -1,0 +1,13 @@
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\bin\Debug\net9.0\LMS.System.Infrastructure.deps.json
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\bin\Debug\net9.0\LMS.System.Infrastructure.dll
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\bin\Debug\net9.0\LMS.System.Infrastructure.pdb
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\LMS.System.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\LMS.System.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\LMS.System.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\LMS.System.Infrastructure.AssemblyInfo.cs
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\LMS.System.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\LMS.System.Infrastructure.dll
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\refint\LMS.System.Infrastructure.dll
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\LMS.System.Infrastructure.pdb
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\ref\LMS.System.Infrastructure.dll
+C:\Users\N.komkov\source\repos\LMS.System-master\LMS.System.Infrastructure\obj\Debug\net9.0\LMS.System.Infrastructure.sourcelink.json
