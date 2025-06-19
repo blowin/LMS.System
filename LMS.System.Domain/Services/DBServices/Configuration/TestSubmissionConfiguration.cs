@@ -12,13 +12,13 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
     /// <summary>
     /// Файл конфигурации TestSubmission.
     /// </summary>
-    public class TestSubmissionConfiguration : IEntityTypeConfiguration<TestSubmission>
+    public class TestSubmissionConfiguration : EntityConfiguration<TestSubmission>
     {
         /// <summary>
         /// Метод конфигурации TestSubmission.
         /// </summary>
         /// <param name="builder">Передаём builder.</param>
-        public void Configure(EntityTypeBuilder<TestSubmission> builder)
+        protected override void ConfigureAdditionalProperties(EntityTypeBuilder<TestSubmission> builder)
         {
             builder.ToTable("TestSubmission");
 

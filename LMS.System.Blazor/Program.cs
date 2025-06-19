@@ -1,6 +1,9 @@
 using LMS.System.Blazor.Components;
 using LMS.System.Domain.Services.DBServices.DBContext;
+using LMS.System.Migrations.MSSQL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Migrations;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +12,7 @@ string connection = builder.Configuration.GetConnectionString("LMS_Main")
     ?? throw new InvalidOperationException("Строка подключения 'LMS_Main' не найдена в конфигурации.");
 
 builder.Services.AddDbContext<ApplicationContext>(builder => builder
-.UseSqlServer(connection, op => op.MigrationsAssembly(typeof(ApplicationContext).Assembly)));
+.UseSqlServer(connection, op => op.MigrationsAssembly(typeof(AppDbContextFactory).Assembly)));
 
 // Add MudBlazor services
 builder.Services.AddMudServices();
