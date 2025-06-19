@@ -38,5 +38,10 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// Коллекция вариантов ответа.
         /// </summary>
         public ICollection<TestAnswerOption> TestAnswerOptions { get; set; } = new List<TestAnswerOption>();
+
+        /// <summary>
+        /// Коллекция отправок теста на вопрос.
+        /// </summary>
+        public ICollection<TestSubmission> TestSubmissions { get; set; } = new List<TestSubmission>();
     }
 }

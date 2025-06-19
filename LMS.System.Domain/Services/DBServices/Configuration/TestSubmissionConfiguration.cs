@@ -24,11 +24,6 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
 
             builder.HasKey(k => k.Id);
 
-            builder.HasMany(e => e.TestAnswerOptions)
-                .WithOne(e => e.TestSubmission)
-                .HasForeignKey(k => k.TestQuestionId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.Property(p => p.Id)
                 .ValueGeneratedOnAdd();
 

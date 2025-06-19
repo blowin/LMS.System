@@ -23,7 +23,7 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
         {
             builder.ToTable("TestQuestion");
 
-            builder.HasMany(p => p.TestAnswerOptions)
+            builder.HasMany(p => p.TestSubmissions)
                 .WithOne(p => p.TestQuestion)
                 .HasForeignKey(p => p.TestQuestionId)
                 .OnDelete(DeleteBehavior.Cascade);

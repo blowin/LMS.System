@@ -38,15 +38,5 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// Навигационное свуойство для Submission.
         /// </summary>
         public Submission? Submission { get; set; }
-
-        /// <summary>
-        /// Навигационное свойство для TestAnswerOption.
-        /// </summary>
-        public TestAnswerOption? TestAnswerOption { get; set; }
-
-        /// <summary>
-        /// Коллекция выбранных ответов на тест.
-        /// </summary>
-        public ICollection<TestAnswerOption> TestAnswerOptions { get; set; } = new List<TestAnswerOption>();
     }
 }

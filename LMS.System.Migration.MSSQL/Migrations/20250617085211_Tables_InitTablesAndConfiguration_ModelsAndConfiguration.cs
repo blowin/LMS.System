@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LMS.System.Migrations.MSSQL.Migrations
 {
     /// <inheritdoc />
-    public partial class BugFixWithForeignKey : Migration
+    public partial class Tables_InitTablesAndConfiguration_ModelsAndConfiguration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

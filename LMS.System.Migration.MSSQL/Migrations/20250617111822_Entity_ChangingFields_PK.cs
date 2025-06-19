@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LMS.System.Migrations.MSSQL.Migrations
 {
     /// <inheritdoc />
-    public partial class MainMigration2 : Migration
+    public partial class Entity_ChangingFields_PK : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

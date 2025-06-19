@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.System.Migrations.MSSQL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250617105133_BugFixV2")]
-    partial class BugFixV2
+    [Migration("20250619085427_Entity_AddingField_IsRequired")]
+    partial class Entity_AddingField_IsRequired
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,356 +29,290 @@ namespace LMS.System.Migrations.MSSQL.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AssignmentType")
-                        .HasColumnType("int")
-                        .HasColumnName("AssignmentType")
-                        .HasComment("0 = Test , 1 = FileUpload , 2 = Text");
+                        .HasColumnType("int");
 
                     b.Property<int>("CourseId")
-                        .HasColumnType("int")
-                        .HasColumnName("CourseId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Deadline")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("Deadline");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)")
-                        .HasColumnName("Description");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("Title");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Assignment", (string)null);
+                    b.ToTable("Assignments");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("Name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
-                        .HasColumnType("int")
-                        .HasColumnName("CategoryId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)")
-                        .HasColumnName("Description");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("InstructorId")
-                        .HasColumnType("int")
-                        .HasColumnName("InstructorId");
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsPublished")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true)
-                        .HasColumnName("IsPubliched");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("Title");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UsersId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("InstructorId");
+                    b.HasIndex("UsersId");
 
-                    b.ToTable("Course", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Enrollment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Completed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("Completed");
+                        .HasColumnType("bit");
 
                     b.Property<int>("CourseId")
-                        .HasColumnType("int")
-                        .HasColumnName("CourseId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EnrollmentDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("EnrollmentDate");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("StudentId")
-                        .HasColumnType("int")
-                        .HasColumnName("StudentId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UsersForEnrollmentId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("UsersForEnrollmentId");
 
-                    b.ToTable("Enrollment", (string)null);
+                    b.ToTable("Enrollments");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Lesson", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(4096)
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Content");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CourseId")
-                        .HasColumnType("int")
-                        .HasColumnName("CourseId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("LessonType")
-                        .HasColumnType("int")
-                        .HasColumnName("LessonType")
-                        .HasComment("0 = Text , 1 = Video , 2 = PDF");
+                        .HasColumnType("int");
 
                     b.Property<int>("Order")
-                        .HasColumnType("int")
-                        .HasColumnName("Order");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("Title");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Lesson", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Submission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AnswerText")
                         .IsRequired()
-                        .HasMaxLength(4096)
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("AnswerText");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AssignmentId")
-                        .HasColumnType("int")
-                        .HasColumnName("AssignmentId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Feedback")
-                        .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)")
-                        .HasColumnName("Feedback");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FilePath")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("FilePath");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Gradle")
-                        .HasColumnType("int")
-                        .HasColumnName("Gradle");
+                        .HasColumnType("int");
 
                     b.Property<int>("StudentId")
-                        .HasColumnType("int")
-                        .HasColumnName("StudentId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("SubmittedAt");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserForSubId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssignmentId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("UserForSubId");
 
-                    b.ToTable("Submission", (string)null);
+                    b.ToTable("Submissions");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.TestAnswerOption", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsCorrect")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("IsCorrect");
+                        .HasColumnType("bit");
 
                     b.Property<string>("OptionText")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)")
-                        .HasColumnName("OptionText");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TestQuestionId")
-                        .HasColumnType("int")
-                        .HasColumnName("TestQuestionId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TestQuestionId");
 
-                    b.ToTable("TestAnswerOption", (string)null);
+                    b.ToTable("TestAnswerOptions");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.TestQuestion", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AssignmentId")
-                        .HasColumnType("int")
-                        .HasColumnName("AssignmentId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("QuestionText")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)")
-                        .HasColumnName("QuestionText");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("QuestionType")
-                        .HasColumnType("int")
-                        .HasColumnName("QuestionType")
-                        .HasComment("0 = SingleChoice , 1 = MultiChoice");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AssignmentId");
 
-                    b.ToTable("TestQuestion", (string)null);
+                    b.ToTable("TestQuestions");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.TestSubmission", b =>
@@ -393,19 +327,13 @@ namespace LMS.System.Migrations.MSSQL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("SelectedOptionId")
-                        .HasColumnType("int")
-                        .HasColumnName("SelectedOptionId");
+                        .HasColumnType("int");
 
                     b.Property<int>("SubmissionId")
-                        .HasColumnType("int")
-                        .HasColumnName("SubmissionId");
-
-                    b.Property<int?>("TestAnswerOptionId")
                         .HasColumnType("int");
 
                     b.Property<int>("TestQuestionId")
-                        .HasColumnType("int")
-                        .HasColumnName("TestQuestionId");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -414,63 +342,47 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasIndex("SubmissionId");
 
-                    b.HasIndex("TestAnswerOptionId");
-
                     b.HasIndex("TestQuestionId");
 
-                    b.ToTable("TestSubmission", (string)null);
+                    b.ToTable("TestSubmissions");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("Id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("Email");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("FirstName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("LastName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(max)")
-                        .HasColumnName("PasswordHash");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Role")
-                        .HasColumnType("int")
-                        .HasColumnName("UsersRole")
-                        .HasComment("0 = Admin , 1 = Teacher , 2 = Student");
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Assignment", b =>
@@ -478,7 +390,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
                     b.HasOne("LMS.System.Domain.Services.DBServices.Models.Course", "CourseForAssignment")
                         .WithMany("AssignmentsInCourse")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CourseForAssignment");
@@ -494,9 +406,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasOne("LMS.System.Domain.Services.DBServices.Models.User", "Users")
                         .WithMany("CoursesForUser")
-                        .HasForeignKey("InstructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsersId");
 
                     b.Navigation("Category");
 
@@ -508,13 +418,12 @@ namespace LMS.System.Migrations.MSSQL.Migrations
                     b.HasOne("LMS.System.Domain.Services.DBServices.Models.Course", "CoursesForEnrollment")
                         .WithMany("EnrollmentInCourse")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LMS.System.Domain.Services.DBServices.Models.User", "UsersForEnrollment")
                         .WithMany("EnrollmentForUsers")
-                        .HasForeignKey("StudentId")
-                        .IsRequired();
+                        .HasForeignKey("UsersForEnrollmentId");
 
                     b.Navigation("CoursesForEnrollment");
 
@@ -526,7 +435,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
                     b.HasOne("LMS.System.Domain.Services.DBServices.Models.Course", "CourseForLesson")
                         .WithMany("LessonsInCourse")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("CourseForLesson");
@@ -542,9 +451,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasOne("LMS.System.Domain.Services.DBServices.Models.User", "UserForSub")
                         .WithMany("SubmissionsForUser")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserForSubId");
 
                     b.Navigation("SubmissionForAssignment");
 
@@ -559,15 +466,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LMS.System.Domain.Services.DBServices.Models.TestSubmission", "TestSubmission")
-                        .WithMany("TestAnswerOptions")
-                        .HasForeignKey("TestQuestionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("TestQuestion");
-
-                    b.Navigation("TestSubmission");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.TestQuestion", b =>
@@ -589,19 +488,13 @@ namespace LMS.System.Migrations.MSSQL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LMS.System.Domain.Services.DBServices.Models.TestAnswerOption", "TestAnswerOption")
-                        .WithMany()
-                        .HasForeignKey("TestAnswerOptionId");
-
                     b.HasOne("LMS.System.Domain.Services.DBServices.Models.TestQuestion", "TestQuestion")
-                        .WithMany()
+                        .WithMany("TestSubmissions")
                         .HasForeignKey("TestQuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Submission");
-
-                    b.Navigation("TestAnswerOption");
 
                     b.Navigation("TestQuestion");
                 });
@@ -630,11 +523,8 @@ namespace LMS.System.Migrations.MSSQL.Migrations
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.TestQuestion", b =>
                 {
                     b.Navigation("TestAnswerOptions");
-                });
 
-            modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.TestSubmission", b =>
-                {
-                    b.Navigation("TestAnswerOptions");
+                    b.Navigation("TestSubmissions");
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.User", b =>

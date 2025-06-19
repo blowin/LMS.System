@@ -32,10 +32,5 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// Навигационное свойство для TestQuestion.
         /// </summary>
         public TestQuestion? TestQuestion { get; set; }
-
-        /// <summary>
-        /// Навигационное свойство для TestSubmission.
-        /// </summary>
-        public TestSubmission? TestSubmission { get; set; }
     }
 }

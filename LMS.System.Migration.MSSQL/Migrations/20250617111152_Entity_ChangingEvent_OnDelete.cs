@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LMS.System.Migrations.MSSQL.Migrations
 {
     /// <inheritdoc />
-    public partial class BugFixV3 : Migration
+    public partial class Entity_ChangingEvent_OnDelete : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

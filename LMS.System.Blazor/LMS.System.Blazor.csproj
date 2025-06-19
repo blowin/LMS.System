@@ -10,6 +10,7 @@
     <PropertyGroup>
         <AnalysisLevel>latest</AnalysisLevel>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <BlazorEnableCompression>false</BlazorEnableCompression>
     </PropertyGroup>
 
     <ItemGroup>
