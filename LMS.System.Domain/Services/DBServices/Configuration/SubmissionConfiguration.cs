@@ -39,7 +39,8 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
                 .HasColumnName("FilePath");
 
             builder.Property(p => p.Gradle)
-                .HasColumnName("Gradle");
+                .HasColumnName("Gradle")
+                .IsRequired();
 
             builder.Property(p => p.Feedback)
                 .HasColumnName("Feedback")

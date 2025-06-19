@@ -1,35 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Models;
 using LMS.System.Domain.Services.DBServices.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Internal;
 
 namespace LMS.System.Domain.Services.DBServices.DBContext
 {
-    /// <summary>
-    /// Extension метод для enum.
-    /// </summary>
-    public static class PropertyBuilderExt
-    {
-        /// <summary>
-        /// Extension метод для enum.
-        /// </summary>
-        /// <typeparam name="TProp">Шаблон.</typeparam>
-        /// <param name="self">передаем шаблон enum.</param>
-        /// <returns>Возвращаем комментарий к бд.</returns>
-        public static PropertyBuilder<TProp> HasEnumComment<TProp>(this PropertyBuilder<TProp> self)
-            where TProp : struct, Enum
-        {
-            var items = Enum.GetValues<TProp>().Select(e => ((int)(object)e) + " = " + e.ToString());
-            return self.HasComment(string.Join(" , ", items));
-        }
-    }
-
     /// <summary>
     /// Контекст для работы с бд.
     /// </summary>
@@ -106,23 +81,6 @@ namespace LMS.System.Domain.Services.DBServices.DBContext
         /// <param name="modelBuilder">конструктор моделей.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
-
-            modelBuilder.Entity<User>(e =>
-            {
-                e.Property(e => e.Role).HasEnumComment();
-            });
-
-            modelBuilder.Entity<TestQuestion>(e =>
-            {
-                e.Property(e => e.QuestionType).HasEnumComment();
-            });
-
-            modelBuilder.Entity<Assignment>(e =>
-            {
-                e.Property(e => e.AssignmentType).HasEnumComment();
-            });
-
             modelBuilder.Entity<Lesson>(e =>
             {
                 e.Property(e => e.LessonType).HasEnumComment();

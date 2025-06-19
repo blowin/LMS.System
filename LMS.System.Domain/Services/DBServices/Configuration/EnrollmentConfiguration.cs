@@ -37,7 +37,8 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
                 .IsRequired();
 
             builder.Property(p => p.EnrollmentDate)
-                .HasColumnName("EnrollmentDate");
+                .HasColumnName("EnrollmentDate")
+                .IsRequired();
 
             builder.Property(p => p.Completed)
                 .HasColumnName("Completed")

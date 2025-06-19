@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LMS.System.Domain.Services.DBServices.Configuration.PropertyBuilderExt;
 using LMS.System.Domain.Services.DBServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -41,7 +42,9 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
                 .IsRequired();
 
             builder.Property(p => p.LessonType)
-                .HasColumnName("LessonType");
+                .HasColumnName("LessonType")
+                .HasEnumComment()
+                .IsRequired();
         }
     }
 }

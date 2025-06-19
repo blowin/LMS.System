@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LMS.System.Domain.Services.DBServices.Configuration.PropertyBuilderExt;
 using LMS.System.Domain.Services.DBServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -26,6 +22,11 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
                 .HasColumnName("Email")
                 .IsRequired().HasMaxLength(100)
                 .IsUnicode(false);
+
+            builder.Property(e => e.Role)
+                .HasColumnName("UsersRole")
+                .HasEnumComment()
+                .IsRequired();
 
             builder.Property(e => e.PasswordHash)
                 .HasColumnName("PasswordHash")
@@ -56,9 +57,6 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
                 .WithOne(p => p.UserForSub)
                 .HasForeignKey(p => p.StudentId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Property(e => e.Role)
-                .HasColumnName("UsersRole");
         }
     }
 }
