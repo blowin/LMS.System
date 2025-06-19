@@ -9,7 +9,7 @@ string connection = builder.Configuration.GetConnectionString("LMS_Main")
     ?? throw new InvalidOperationException("Строка подключения 'LMS_Main' не найдена в конфигурации.");
 
 builder.Services.AddDbContext<ApplicationContext>(builder => builder
-.UseSqlServer(connection, op => op.MigrationsAssembly("LMS.System.Migrations.MSSQL")));
+.UseSqlServer(connection, op => op.MigrationsAssembly(typeof(ApplicationContext).Assembly)));
 
 // Add MudBlazor services
 builder.Services.AddMudServices();
