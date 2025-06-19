@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Models.BaseClases;
+using LMS.System.Domain.Services.DBServices.Models.Enums;
 
 namespace LMS.System.Domain.Services.DBServices.Models
 {
@@ -26,7 +27,7 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// <summary>
         /// Тип вопроса один/несколько вариант(ов) ответа.
         /// </summary>
-        public EVTypeQuestion QuestionType { get; set; }
+        public EVQuestionType QuestionType { get; set; }
 
         /// <summary>
         /// Навигационное свойство для Assignment.
@@ -37,21 +38,5 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// Коллекция вариантов ответа.
         /// </summary>
         public ICollection<TestAnswerOption> TestAnswerOptions { get; set; } = new List<TestAnswerOption>();
-    }
-
-    /// <summary>
-    /// Перечисление типов вопроса.
-    /// </summary>
-    public enum EVTypeQuestion
-    {
-        /// <summary>
-        /// Один вариант ответа верный.
-        /// </summary>
-        SingleChoice,
-
-        /// <summary>
-        /// Несколько вариантов ответа верны.
-        /// </summary>
-        MultiChoice,
     }
 }

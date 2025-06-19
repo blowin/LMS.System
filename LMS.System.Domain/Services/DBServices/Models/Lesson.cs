@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Models.BaseClases;
+using LMS.System.Domain.Services.DBServices.Models.Enums;
 
 namespace LMS.System.Domain.Services.DBServices.Models
 {
@@ -45,26 +46,5 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// навигационное свойство для курсов.
         /// </summary>
         public Course? CourseForLesson { get; set; }
-    }
-
-    /// <summary>
-    /// Определяет тип урока Text/Video/PDF.
-    /// </summary>
-    public enum EVLessonType
-    {
-        /// <summary>
-        /// Текстовый урок.
-        /// </summary>
-        Text,
-
-        /// <summary>
-        /// Видео урок.
-        /// </summary>
-        Video,
-
-        /// <summary>
-        /// Урок в формате PDF.
-        /// </summary>
-        PDF,
     }
 }

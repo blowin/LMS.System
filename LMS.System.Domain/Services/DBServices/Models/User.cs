@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Models.BaseClases;
+using LMS.System.Domain.Services.DBServices.Models.Enums;
 using Microsoft.VisualBasic;
 
 namespace LMS.System.Domain.Services.DBServices.Models
@@ -27,7 +28,7 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// <summary>
         /// Роль пользователя(Админ,Преподаватель,Студент).
         /// </summary>
-        public EVUsersRole Role { get; set; }
+        public EVRole Role { get; set; }
 
         /// <summary>
         /// Имя пользователя.
@@ -53,26 +54,5 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// коллекция отправленных решений пользователя.
         /// </summary>
         public ICollection<Submission> SubmissionsForUser { get; set; } = new List<Submission>();
-    }
-
-    /// <summary>
-    /// Роли для пользователя.
-    /// </summary>
-    public enum EVUsersRole
-    {
-        /// <summary>
-        /// Роль админ.
-        /// </summary>
-        Admin,
-
-        /// <summary>
-        /// Роль преподаватель.
-        /// </summary>
-        Teacher,
-
-        /// <summary>
-        /// Роль студент.
-        /// </summary>
-        Student,
     }
 }

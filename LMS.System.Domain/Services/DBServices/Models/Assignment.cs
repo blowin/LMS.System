@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Models.BaseClases;
+using LMS.System.Domain.Services.DBServices.Models.Enums;
 
 namespace LMS.System.Domain.Services.DBServices.Models
 {
@@ -36,7 +31,7 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// <summary>
         /// Тип задания Test, FileUpload , Text.
         /// </summary>
-        public EVTypeOfAssigment AssignmentType { get; set; }
+        public EVAssignmentType AssignmentType { get; set; }
 
         /// <summary>
         /// навигационное свойство для курсов.
@@ -52,26 +47,5 @@ namespace LMS.System.Domain.Services.DBServices.Models
         /// Коллекция тестовых вопросов в задании.
         /// </summary>
         public ICollection<TestQuestion> TestQuestionsInAssignment { get; set; } = new List<TestQuestion>();
-    }
-
-    /// <summary>
-    /// Определяет тип задания Test, FileUpload , Text.
-    /// </summary>
-    public enum EVTypeOfAssigment
-    {
-        /// <summary>
-        /// Тип задания тест.
-        /// </summary>
-        Test,
-
-        /// <summary>
-        /// Тип задания Загрузка файла.
-        /// </summary>
-        FileUpload,
-
-        /// <summary>
-        /// Текстовый тип задания.
-        /// </summary>
-        Text,
     }
 }

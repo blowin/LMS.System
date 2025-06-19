@@ -81,11 +81,6 @@ namespace LMS.System.Domain.Services.DBServices.DBContext
         /// <param name="modelBuilder">конструктор моделей.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Lesson>(e =>
-            {
-                e.Property(e => e.LessonType).HasEnumComment();
-            });
-
             base.OnModelCreating(modelBuilder);
         }
 

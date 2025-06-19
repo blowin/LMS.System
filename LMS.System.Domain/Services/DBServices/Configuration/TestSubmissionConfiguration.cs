@@ -41,7 +41,8 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
                 .IsRequired();
 
             builder.Property(p => p.SelectedOptionId)
-                .HasColumnName("SelectedOptionId");
+                .HasColumnName("SelectedOptionId")
+                .IsRequired();
         }
     }
 }
