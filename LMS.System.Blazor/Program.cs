@@ -2,8 +2,6 @@ using LMS.System.Blazor.Components;
 using LMS.System.Domain.Services.DBServices.DBContext;
 using LMS.System.Migrations.MSSQL;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Migrations;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
