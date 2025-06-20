@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -21,11 +16,6 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
         protected override void ConfigureAdditionalProperties(EntityTypeBuilder<TestSubmission> builder)
         {
             builder.ToTable("TestSubmission");
-
-            builder.HasKey(k => k.Id);
-
-            builder.Property(p => p.Id)
-                .ValueGeneratedOnAdd();
 
             builder.Property(p => p.TestQuestionId)
                 .HasColumnName("TestQuestionId")

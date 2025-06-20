@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Models.BaseClases;
 using LMS.System.Domain.Services.DBServices.Models.Enums;
-using Microsoft.VisualBasic;
 
 namespace LMS.System.Domain.Services.DBServices.Models
 {

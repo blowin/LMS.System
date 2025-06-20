@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Configuration.PropertyBuilderExt;
 using LMS.System.Domain.Services.DBServices.Models;
 using Microsoft.EntityFrameworkCore;

@@ -57,7 +57,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Assignments");
+                    b.ToTable("Assignments", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Category", b =>
@@ -80,7 +80,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Course", b =>
@@ -123,7 +123,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Enrollment", b =>
@@ -161,7 +161,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasIndex("UsersForEnrollmentId");
 
-                    b.ToTable("Enrollments");
+                    b.ToTable("Enrollments", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Lesson", b =>
@@ -199,7 +199,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Submission", b =>
@@ -247,7 +247,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasIndex("UserForSubId");
 
-                    b.ToTable("Submissions");
+                    b.ToTable("Submissions", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.TestAnswerOption", b =>
@@ -278,7 +278,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasIndex("TestQuestionId");
 
-                    b.ToTable("TestAnswerOptions");
+                    b.ToTable("TestAnswerOptions", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.TestQuestion", b =>
@@ -309,7 +309,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasIndex("AssignmentId");
 
-                    b.ToTable("TestQuestions");
+                    b.ToTable("TestQuestions", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.TestSubmission", b =>
@@ -341,7 +341,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasIndex("TestQuestionId");
 
-                    b.ToTable("TestSubmissions");
+                    b.ToTable("TestSubmissions", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.User", b =>
@@ -379,7 +379,7 @@ namespace LMS.System.Migrations.MSSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("LMS.System.Domain.Services.DBServices.Models.Assignment", b =>

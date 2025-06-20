@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,21 +7,15 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
     /// <summary>
     /// Файл конфигурации для Enrollment.
     /// </summary>
-    public class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollment>
+    public class EnrollmentConfiguration : EntityConfiguration<Enrollment>
     {
         /// <summary>
         /// Метод конфигурации Enrollment.
         /// </summary>
         /// <param name="builder">Передаём builder.</param>
-        public void Configure(EntityTypeBuilder<Enrollment> builder)
+        protected override void ConfigureAdditionalProperties(EntityTypeBuilder<Enrollment> builder)
         {
             builder.ToTable("Enrollment");
-
-            builder.HasKey(e => e.Id);
-
-            builder.Property(p => p.Id)
-                .HasColumnName("Id")
-                .ValueGeneratedOnAdd();
 
             builder.Property(p => p.StudentId)
                 .HasColumnName("StudentId")
