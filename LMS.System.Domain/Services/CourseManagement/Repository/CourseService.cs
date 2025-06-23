@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LMS.System.Domain.Services.CourseManagement.CourseServices;
 using LMS.System.Domain.Services.CourseManagement.Interfaces;
 using LMS.System.Domain.Services.DBServices.DBContext;
 using LMS.System.Domain.Services.DBServices.Models;
@@ -24,6 +25,17 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         public CourseService(ApplicationContext context)
         {
             _context = context;
+        }
+
+        /// <summary>
+        /// Реализация метода получения страниц курсов.
+        /// </summary>
+        /// <param name="request">Параметры фильтрации.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Возвращаем страницы.</returns>
+        public Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken)
+        {
+            return; 
         }
 
         /// <summary>
