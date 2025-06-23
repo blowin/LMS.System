@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LMS.System.Domain.Services.CRUD_for_Courses.Interfaces;
+using LMS.System.Domain.Services.CourseManagement.Interfaces;
 using LMS.System.Domain.Services.DBServices.DBContext;
 using LMS.System.Domain.Services.DBServices.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LMS.System.Domain.Services.CRUD_for_Courses.Repository
+namespace LMS.System.Domain.Services.CourseManagement.Repository
 {
     /// <summary>
     /// Реализация ICourseRepository.
@@ -92,6 +92,17 @@ namespace LMS.System.Domain.Services.CRUD_for_Courses.Repository
                 course.IsPublished = true;
                 await _context.SaveChangesAsync(cancellationToken);
             }
+        }
+
+        /// <summary>
+        /// Архивация курса.
+        /// </summary>
+        /// <param name="id">ID курса.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Ничего не возвращаем.</returns>
+        public async Task ArchiveCourseAsync(int id, CancellationToken cancellationToken)
+        {
+            var course = await GetCourseByIdAsync(id, cancellationToken);
         }
     }
 }

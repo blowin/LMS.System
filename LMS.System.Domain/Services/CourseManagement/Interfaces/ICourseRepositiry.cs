@@ -5,13 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using LMS.System.Domain.Services.DBServices.Models;
 
-namespace LMS.System.Domain.Services.CRUD_for_Courses.Interfaces
+namespace LMS.System.Domain.Services.CourseManagement.Interfaces
 {
     /// <summary>
     /// Интерфейс репозитория.
     /// </summary>
     public interface ICourseRepository
     {
+        /// <summary>
+        /// Получение страницы курса.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken);
+
         /// <summary>
         /// Получение курса по ID.
         /// </summary>
