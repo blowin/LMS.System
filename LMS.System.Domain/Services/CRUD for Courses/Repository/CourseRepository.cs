@@ -61,5 +61,21 @@ namespace LMS.System.Domain.Services.CRUD_for_Courses.Repository
             _context.Courses.Update(course);
             await _context.SaveChangesAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Метод удаления курса.
+        /// </summary>
+        /// <param name="id">ID курса.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Ничего.</returns>
+        public async Task DeleteCourseAsync(int id, CancellationToken cancellationToken)
+        {
+            var course = await GetCourseByIdAsync(id, cancellationToken);
+            if (course != null)
+            {
+                _context.Courses.Remove(course);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+        }
     }
 }
