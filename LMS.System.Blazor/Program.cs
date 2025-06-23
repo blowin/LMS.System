@@ -1,5 +1,6 @@
 using System.Text;
 using LMS.System.Blazor.Components;
+using LMS.System.Domain.Services.Auth;
 using LMS.System.Domain.Services.DBServices.DBContext;
 using LMS.System.Migrations.MSSQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,11 +10,15 @@ using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// JWT configuration
+// Конфигурация JWT (из appsettings.json)
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
 
-// Add JWT authenticate
+// Регистрация JWT-сервисов
+builder.Services.Configure<JwtSettings>(jwtSettings);
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+// Настройка аутентификации
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -33,7 +38,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Adding authorization with roles
+// Настройка авторизации с ролями
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Student", policy => policy.RequireRole("Student"));
@@ -41,28 +46,30 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
 });
 
+// Подключение БД
 string connection = builder.Configuration.GetConnectionString("LMS_Main")
     ?? throw new InvalidOperationException("Строка подключения 'LMS_Main' не найдена в конфигурации.");
 
 builder.Services.AddDbContext<ApplicationContext>(builder => builder
     .UseSqlServer(connection, op => op.MigrationsAssembly(typeof(AppDbContextFactory).Assembly)));
 
-// Add MudBlazor services
+// MudBlazor
 builder.Services.AddMudServices();
 
-// Add services to the container.
+// Blazor
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
+// Применение миграций
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
     context.Database.Migrate();
 }
 
-// Configure the HTTP request pipeline.
+// Конвейер middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
@@ -70,13 +77,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Добавьте эти middleware перед UseAntiforgery и MapRazorComponents
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseAntiforgery();
-
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
