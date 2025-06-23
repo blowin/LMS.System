@@ -49,5 +49,17 @@ namespace LMS.System.Domain.Services.CRUD_for_Courses.Repository
             await _context.SaveChangesAsync(cancellationToken);
             return course.Id;
         }
+
+        /// <summary>
+        /// Метод изменения курса.
+        /// </summary>
+        /// <param name="course">Передаём курс.</param>
+        /// <param name="cancellationToken">Токуен отмены.</param>
+        /// <returns>Возвращаем сохранение изменений.</returns>
+        public async Task UpdateCourseAsync(Course course, CancellationToken cancellationToken)
+        {
+            _context.Courses.Update(course);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

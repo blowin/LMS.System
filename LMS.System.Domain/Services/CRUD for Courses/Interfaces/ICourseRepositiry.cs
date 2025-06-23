@@ -33,7 +33,7 @@ namespace LMS.System.Domain.Services.CRUD_for_Courses.Interfaces
         /// </summary>
         /// <param name="course">Передаём курс.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
-        /// <returns>Возвращаем сообщение.</returns>
+        /// <returns>Возвращаем сохранение изменений.</returns>
         Task UpdateCourseAsync(Course course, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace LMS.System.Domain.Services.CRUD_for_Courses.Interfaces
         /// </summary>
         /// <param name="id">Айдишник курса.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
-        /// <returns>Возвращаем сообщение.</returns>
+        /// <returns>Возвращаем сохранение изменений.</returns>
         Task DeleteCourseAsync(Guid id, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace LMS.System.Domain.Services.CRUD_for_Courses.Interfaces
         /// </summary>
         /// <param name="id">Айдишник курса.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
-        /// <returns>Возвращаем сообщение.</returns>
+        /// <returns>Возвращаем сохранение изменений.</returns>
         Task PublishCourseAsync(Guid id, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace LMS.System.Domain.Services.CRUD_for_Courses.Interfaces
         /// </summary>
         /// <param name="id">Айдишник курса.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
-        /// <returns>Возвращаем сообщение.</returns>
+        /// <returns>Возвращаем сохранение изменений.</returns>
         Task ArchiveCourseAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }
