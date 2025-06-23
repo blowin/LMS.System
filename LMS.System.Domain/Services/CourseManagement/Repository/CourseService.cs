@@ -35,7 +35,17 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <returns>Возвращаем страницы.</returns>
         public Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken)
         {
-            return; 
+            var query = _context.Courses
+                .Include(c => c.InstructorId)
+                .Include(c => c.CategoryId)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(request.SearchTerm))
+            {
+                query = query.Where(c =>
+                c.Title.Contains(request.SearchTerm) ||
+                c.Description.Contains(request.SearchTerm));
+            }
         }
 
         /// <summary>
