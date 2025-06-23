@@ -77,5 +77,21 @@ namespace LMS.System.Domain.Services.CRUD_for_Courses.Repository
                 await _context.SaveChangesAsync(cancellationToken);
             }
         }
+
+        /// <summary>
+        /// Метод публикации курса.
+        /// </summary>
+        /// <param name="id">ID курса.</param>
+        /// <param name="cancellationToken">Токен отмены</param>
+        /// <returns>Ничего не возвращаем.</returns>
+        public async Task PublishCourseAsync(int id, CancellationToken cancellationToken)
+        {
+            var course = await GetCourseByIdAsync(id, cancellationToken);
+            if (course != null)
+            {
+                course.IsPublished = true;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+        }
     }
 }
