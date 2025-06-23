@@ -12,14 +12,33 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseServices
     public class CoursePageRequest
     {
         /// <summary>
+        /// Максимальное количество записей.
+        /// </summary>
+        private const int MaxPageSize = 100;
+
+        /// <summary>
+        /// Минимальное количество записей.
+        /// </summary>
+        private int _PageSize = 10;
+
+        /// <summary>
+        /// количество страниц.
+        /// </summary>
+        public int Page { get; set; } = 1;
+
+        /// <summary>
+        /// Получение количества записей на странице.
+        /// </summary>
+        public int PageSize
+        {
+            get => _PageSize;
+            set => _PageSize = value > MaxPageSize ? MaxPageSize : value;
+        }
+
+        /// <summary>
         /// Поиск по ID.
         /// </summary>
         public int SearchById { get; set; }
-
-        /// <summary>
-        /// Номер страницы.
-        /// </summary>
-        public int Page { get; set; } = 1;
 
         /// <summary>
         /// Поиск по названию категории.
