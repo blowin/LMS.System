@@ -13,7 +13,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
     /// <summary>
     /// Реализация ICourseRepository.
     /// </summary>
-    public class CourseRepository : ICourseRepository
+    public class CourseService : ICourseService
     {
         private readonly ApplicationContext _context;
 
@@ -21,7 +21,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// Constructor which get a context.
         /// </summary>
         /// <param name="context">Send a context.</param>
-        public CourseRepository(ApplicationContext context)
+        public CourseService(ApplicationContext context)
         {
             _context = context;
         }
@@ -82,7 +82,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// Метод публикации курса.
         /// </summary>
         /// <param name="id">ID курса.</param>
-        /// <param name="cancellationToken">Токен отмены</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Ничего не возвращаем.</returns>
         public async Task PublishCourseAsync(int id, CancellationToken cancellationToken)
         {

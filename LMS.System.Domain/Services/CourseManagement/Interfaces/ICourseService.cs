@@ -11,14 +11,14 @@ namespace LMS.System.Domain.Services.CourseManagement.Interfaces
     /// <summary>
     /// Интерфейс репозитория.
     /// </summary>
-    public interface ICourseRepository
+    public interface ICourseService
     {
         /// <summary>
         /// Получение страницы курса.
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <param name="request">Параметры страницы.</param>
+        /// <param name="cancellationToken">Токен отмены.</param>
+        /// <returns>Ничего не возвращает.</returns>
         Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken);
 
         /// <summary>

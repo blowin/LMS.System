@@ -19,7 +19,7 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseServices
         /// <summary>
         /// Минимальное количество записей.
         /// </summary>
-        private int _PageSize = 10;
+        private int _pageSize = 10;
 
         /// <summary>
         /// количество страниц.
@@ -31,8 +31,8 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseServices
         /// </summary>
         public int PageSize
         {
-            get => _PageSize;
-            set => _PageSize = value > MaxPageSize ? MaxPageSize : value;
+            get => _pageSize;
+            set => _pageSize = value > MaxPageSize ? MaxPageSize : value;
         }
 
         /// <summary>
