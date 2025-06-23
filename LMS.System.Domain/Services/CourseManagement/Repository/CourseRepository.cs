@@ -103,6 +103,11 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         public async Task ArchiveCourseAsync(int id, CancellationToken cancellationToken)
         {
             var course = await GetCourseByIdAsync(id, cancellationToken);
+            if (course != null)
+            {
+                course.IsArchive = true;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
         }
     }
 }

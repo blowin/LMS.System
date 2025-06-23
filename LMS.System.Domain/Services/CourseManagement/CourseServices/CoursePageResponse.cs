@@ -12,6 +12,11 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseServices
     public class CoursePageResponse
     {
         /// <summary>
+        /// Идентификатор курса.
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
         /// Заголовок курса.
         /// </summary>
         public required string Title { get; set; }
@@ -30,5 +35,10 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseServices
         /// Имя преподавателя.
         /// </summary>
         public required string InstructorName { get; set; }
+
+        /// <summary>
+        /// Количество записавшихся студентов.
+        /// </summary>
+        public required int TotalStudents { get; set; }
     }
 }
