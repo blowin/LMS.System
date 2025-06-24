@@ -35,7 +35,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Interfaces
         /// <summary>
         /// Имеется ли предыдущая страница.
         /// </summary>
-        bool HasPreviousPage { get; } // Есть ли предыдущая страница?
+        bool HasPreviousPage { get; }
 
         /// <summary>
         /// Есть ли следующая страница.

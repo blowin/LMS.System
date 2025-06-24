@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LMS.System.Domain.Services.CourseManagement.Page;
 
 namespace LMS.System.Domain.Services.CourseManagement.CourseServices
 {
     /// <summary>
     /// Класс параметров запроса.
     /// </summary>
-    public class CoursePageRequest
+    public class CoursePageRequest : PageSettings
     {
         /// <summary>
         /// Поиск по ID.

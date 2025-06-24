@@ -9,7 +9,7 @@ using LMS.System.Domain.Services.DBServices.Models;
 namespace LMS.System.Domain.Services.CourseManagement.Interfaces
 {
     /// <summary>
-    /// Интерфейс репозитория.
+    /// Интерфейс сервиса.
     /// </summary>
     public interface ICourseService
     {

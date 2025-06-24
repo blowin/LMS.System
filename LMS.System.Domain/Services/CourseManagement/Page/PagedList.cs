@@ -14,6 +14,22 @@ namespace LMS.System.Domain.Services.CourseManagement.Page
     public class PagedList<T> : IPagedList<T>
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="PagedList{T}"/> class.
+        /// </summary>
+        /// <param name="items">Количество элементов.</param>
+        /// <param name="currentPage">Текущая страница.</param>
+        /// <param name="pageSize">Количество страниц.</param>
+        /// <param name="totalItems">Всего элементов.</param>
+        public PagedList(IEnumerable<T> items, int currentPage, int pageSize, int totalItems)
+        {
+            Items = items;
+            CurrentPage = currentPage;
+            PageSize = pageSize;
+            TotalItems = totalItems;
+            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        }
+
+        /// <summary>
         /// Элементы текущей страницы.
         /// </summary>
         public IEnumerable<T> Items { get; }
@@ -34,7 +50,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Page
         public int TotalItems { get; }
 
         /// <summary>
-        /// Общее количество страниц
+        /// Общее количество страниц.
         /// </summary>
         public int TotalPages { get; }
 
@@ -47,21 +63,5 @@ namespace LMS.System.Domain.Services.CourseManagement.Page
         /// Есть ли следующая страница?.
         /// </summary>
         public bool HasNextPage => CurrentPage < TotalPages;
-
-        /// <summary>
-        /// Реализация полей в конструкторе.
-        /// </summary>
-        /// <param name="items"></param>
-        /// <param name="currentPage"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="totalItems"></param>
-        public PagedList(IEnumerable<T> items, int currentPage, int pageSize, int totalItems)
-        {
-            Items = items;
-            CurrentPage = currentPage;
-            PageSize = pageSize;
-            TotalItems = totalItems;
-            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-        }
     }
 }
