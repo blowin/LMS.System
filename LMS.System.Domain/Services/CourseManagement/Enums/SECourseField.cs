@@ -33,6 +33,13 @@ namespace LMS.System.Domain.Services.CourseManagement.Enums
         }
 
         /// <summary>
+        /// Конвертация из Enum в int.
+        /// </summary>
+        /// <param name="value">Значение enum.</param>
+        /// <returns>Интовое значение enum value.</returns>
+        public SECourseField FromEnum(EVCourseField value) => FromValue((int)value);
+
+        /// <summary>
         /// Сортировка курса.
         /// </summary>
         /// <param name="query">Курсы.</param>
