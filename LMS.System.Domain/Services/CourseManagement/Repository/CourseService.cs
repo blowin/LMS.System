@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ardalis.SmartEnum;
 using LMS.System.Domain.Services.CourseManagement.CourseServices;
+using LMS.System.Domain.Services.CourseManagement.Enums;
 using LMS.System.Domain.Services.CourseManagement.Interfaces;
 using LMS.System.Domain.Services.CourseManagement.Page;
 using LMS.System.Domain.Services.DBServices.DBContext;
@@ -28,18 +29,6 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         public CourseService(ApplicationContext context)
         {
             _context = context;
-        }
-
-        [Flags]
-        public enum EVCourseField
-        {
-
-        }
-
-        public enum EVSortType
-        {
-            Asc,
-            Desc
         }
 
         public abstract class SECourseField : SmartEnum<SECourseField, EVCourseField>
@@ -77,6 +66,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <summary>
         /// Реализация метода получения страниц курсов.
         /// </summary>
+        /// <param name="courseField">Поле курса.</param>>
         /// <param name="request">Параметры фильтрации.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращаем страницы.</returns>
