@@ -31,38 +31,6 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
             _context = context;
         }
 
-        public abstract class SECourseField : SmartEnum<SECourseField, EVCourseField>
-        {
-            public static readonly SECourseField Title = new Title();
-            public static readonly SECourseField Category = new Category();
-
-            public SECourseField(EVCourseField value) : base(value.ToString(), value)
-            {
-            }
-
-            public abstract IQueryable<Course> OrderBy(IQueryable<Course> query, EVSortType sortType);
-
-            private sealed class Title : SECourseField
-            {
-                public Title() : base(EVCourseField.Title)
-                {
-                }
-
-                public override IQueryable<Course> OrderBy(IQueryable<Course> query, EVSortType sortType)
-                    => sortType == EVSortType.Asc ? query.OrderBy(e => e.Title) : query.OrderByDescending(e => e.Title);
-            }
-
-            private sealed class Category : SECourseField
-            {
-                public Category() : base(EVCourseField.Category)
-                {
-                }
-
-                public override IQueryable<Course> OrderBy(IQueryable<Course> query, EVSortType sortType)
-                    => sortType == EVSortType.Asc ? query.OrderBy(e => e.Category) : query.OrderByDescending(e => e.Category);
-            }
-        }
-
         /// <summary>
         /// Реализация метода получения страниц курсов.
         /// </summary>
@@ -72,30 +40,16 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <returns>Возвращаем страницы.</returns>
         public async Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(EVCourseField courseField, CoursePageRequest request, CancellationToken cancellationToken)
         {
-            EVCourseField e = EVCourseField.Category & EVCourseField.Title;
-            var sortItems = Enum.GetValues<EVCourseField>()
-                .Where(e => (e & courseField) == e)
-                .Select(SECourseField.FromValue)
-                .ToList();
-
             var query = _context.Courses
-                .Include(c => c.InstructorId)
-                .Include(c => c.CategoryId)
+                .Include(c => c.Users)
+                .Include(c => c.Category)
                 .AsQueryable();
-
-            foreach (var item in sortItems)
-            {
-                query = item.OrderBy(query, EVSortType.Desc);
-            }
-
-            var SearchById = _context.Courses
-                .FirstOrDefault(c => c.Id == request.SearchById);
 
             if (!string.IsNullOrEmpty(request.SearchTerm))
             {
                 query = query.Where(c =>
-                c.Title.Contains(request.SearchTerm) ||
-                c.Description.Contains(request.SearchTerm));
+                    c.Title.Contains(request.SearchTerm) ||
+                    c.Description.Contains(request.SearchTerm));
             }
 
             if (request.SearchById > 0)
@@ -106,52 +60,55 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
             if (!string.IsNullOrEmpty(request.SearchByCategoryName))
             {
                 query = query.Where(c =>
-                c.Category != null &&
-                c.Category.Name.Contains(request.SearchByCategoryName));
+                    c.Category != null &&
+                    c.Category.Name.Contains(request.SearchByCategoryName));
             }
 
             if (request.SearchByInstructorId > 0)
             {
-                query = query.Where(c => c.Id == request.SearchByInstructorId);
+                query = query.Where(c =>
+                    c.InstructorId == request.SearchByInstructorId);
             }
 
-            query = request.SortBy?.ToLower() switch
+            if (courseField != EVCourseField.None)
             {
-                "title" => request.SortDescending
-                    ? query.OrderByDescending(c => c.Title)
-                    : query.OrderBy(c => c.Title),
+                if (courseField.HasFlag(EVCourseField.Title))
+                {
+                    query = request.SortDescending
+                        ? query.OrderByDescending(c => c.Title)
+                        : query.OrderBy(c => c.Title);
+                }
+                else if (courseField.HasFlag(EVCourseField.Category))
+                {
+                    query = request.SortDescending
+                        ? query.OrderByDescending(c => c.Category != null ? c.Category.Name : null)
+                        : query.OrderBy(c => c.Category != null ? c.Category.Name : null);
+                }
+            }
+            else
+            {
+                query = query.OrderBy(c => c.Id);
+            }
 
-                "category" => request.SortDescending
-                    ? query.OrderByDescending(c => c.Category != null ? c.Category.Name : null)
-                    : query.OrderBy(c => c.Category != null ? c.Category.Name : null),
+            var totalCount = await query.CountAsync(cancellationToken);
 
-                "instructor" => request.SortDescending
-                    ? query.OrderByDescending(c => c.Users != null
-                        ? $"{c.Users.LastName} {c.Users.FirstName} "
-                        : null)
-                    : query.OrderBy(c => c.Users != null
-                    ? $"{c.Users.LastName} {c.Users.FirstName} "
-                        : null),
-
-                "date" => request.SortDescending
-                    ? query.OrderByDescending(c => c.CreatedAt)
-                    : query.OrderBy(c => c.CreatedAt),
-
-                _ => query.OrderBy(c => c.Id),
-            };
-
-            var TotalCount = await query.CountAsync(cancellationToken);
-
-            var items = query
+            var items = await query
                 .Select(c => new CoursePageResponse
                 {
                     Id = c.Id,
                     Title = c.Title ?? "Без названия",
                     Description = c.Description ?? "Описание отсутствует",
                     CategoryName = c.Category != null ? c.Category.Name : "Без категории",
-                });
+                    InstructorName = c.Users != null && c.Users.FirstName != null && c.Users.LastName != null
+                        ? $"{c.Users.LastName} {c.Users.FirstName}"
+                        : "Неизвестный инструктор",
+                })
+                .ToListAsync(cancellationToken);
 
-            return new PagedList<CoursePageResponse>(items, request.Page, request.PageSize, TotalCount);
+            return new PagedList<CoursePageResponse>(
+                items,
+                request.Page,
+                request.PageSize);
         }
 
         /// <summary>

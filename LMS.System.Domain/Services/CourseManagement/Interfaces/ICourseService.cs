@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LMS.System.Domain.Services.CourseManagement.CourseServices;
+using LMS.System.Domain.Services.CourseManagement.Enums;
 using LMS.System.Domain.Services.DBServices.Models;
+using X.PagedList;
 
 namespace LMS.System.Domain.Services.CourseManagement.Interfaces
 {
@@ -16,10 +18,11 @@ namespace LMS.System.Domain.Services.CourseManagement.Interfaces
         /// <summary>
         /// Получение страницы курса.
         /// </summary>
+        /// <param name="courseField">Поля по которым будет производиться сортировка.</param>>
         /// <param name="request">Параметры страницы.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Ничего не возвращает.</returns>
-        Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken);
+        Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(EVCourseField courseField, CoursePageRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Получение курса по ID.

@@ -30,5 +30,10 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseServices
         /// Название категории к которому относится курс.
         /// </summary>
         public required string CategoryName { get; set; }
+
+        /// <summary>
+        /// Название категории к которому относится курс.
+        /// </summary>
+        public required string InstructorName { get; set; }
     }
 }
