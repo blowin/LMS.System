@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ardalis.SmartEnum;
 using LMS.System.Domain.Services.CourseManagement.CourseServices;
 using LMS.System.Domain.Services.CourseManagement.Interfaces;
 using LMS.System.Domain.Services.CourseManagement.Page;
 using LMS.System.Domain.Services.DBServices.DBContext;
 using LMS.System.Domain.Services.DBServices.Models;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace LMS.System.Domain.Services.CourseManagement.Repository
 {
@@ -28,18 +30,73 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
             _context = context;
         }
 
+        [Flags]
+        public enum EVCourseField
+        {
+
+        }
+
+        public enum EVSortType
+        {
+            Asc,
+            Desc
+        }
+
+        public abstract class SECourseField : SmartEnum<SECourseField, EVCourseField>
+        {
+            public static readonly SECourseField Title = new Title();
+            public static readonly SECourseField Category = new Category();
+
+            public SECourseField(EVCourseField value) : base(value.ToString(), value)
+            {
+            }
+
+            public abstract IQueryable<Course> OrderBy(IQueryable<Course> query, EVSortType sortType);
+
+            private sealed class Title : SECourseField
+            {
+                public Title() : base(EVCourseField.Title)
+                {
+                }
+
+                public override IQueryable<Course> OrderBy(IQueryable<Course> query, EVSortType sortType)
+                    => sortType == EVSortType.Asc ? query.OrderBy(e => e.Title) : query.OrderByDescending(e => e.Title);
+            }
+
+            private sealed class Category : SECourseField
+            {
+                public Category() : base(EVCourseField.Category)
+                {
+                }
+
+                public override IQueryable<Course> OrderBy(IQueryable<Course> query, EVSortType sortType)
+                    => sortType == EVSortType.Asc ? query.OrderBy(e => e.Category) : query.OrderByDescending(e => e.Category);
+            }
+        }
+
         /// <summary>
         /// Реализация метода получения страниц курсов.
         /// </summary>
         /// <param name="request">Параметры фильтрации.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращаем страницы.</returns>
-        public async Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken)
+        public async Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(EVCourseField courseField, CoursePageRequest request, CancellationToken cancellationToken)
         {
+            EVCourseField e = EVCourseField.Category & EVCourseField.Title;
+            var sortItems = Enum.GetValues<EVCourseField>()
+                .Where(e => (e & courseField) == e)
+                .Select(SECourseField.FromValue)
+                .ToList();
+
             var query = _context.Courses
                 .Include(c => c.InstructorId)
                 .Include(c => c.CategoryId)
                 .AsQueryable();
+
+            foreach (var item in sortItems)
+            {
+                query = item.OrderBy(query, EVSortType.Desc);
+            }
 
             var SearchById = _context.Courses
                 .FirstOrDefault(c => c.Id == request.SearchById);
@@ -96,8 +153,6 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
             var TotalCount = await query.CountAsync(cancellationToken);
 
             var items = query
-                .Skip((request.Page - 1) * request.PageSize)
-                .Take(request.PageSize)
                 .Select(c => new CoursePageResponse
                 {
                     Id = c.Id,

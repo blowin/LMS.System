@@ -11,7 +11,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Page
     /// Реализация интерфейса IPagedList.
     /// </summary>
     /// <typeparam name="T">.</typeparam>
-    public class PagedList<T> : IPagedList<T>
+    public class PagedList<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PagedList{T}"/> class.
