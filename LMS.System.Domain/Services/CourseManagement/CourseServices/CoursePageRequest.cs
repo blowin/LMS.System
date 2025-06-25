@@ -18,7 +18,7 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseServices
         public int SearchById { get; set; }
 
         /// <summary>
-        /// Поисковой запрос.
+        /// Поисковой запрос для курса.
         /// </summary>
         public string? SearchTerm { get; set; }
 
