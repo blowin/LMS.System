@@ -19,6 +19,16 @@ namespace LMS.System.Domain.Services.DBServices.Models
         public required string Content { get; set; }
 
         /// <summary>
+        /// Поле для пути к PDF файлу.
+        /// </summary>
+        public string? FilePDFPath { get; set; }
+
+        /// <summary>
+        /// Поле для пути к Видео файлу.
+        /// </summary>
+        public string? MoviesPath { get; set; }
+
+        /// <summary>
         /// Уникальный номер курса.
         /// Связывает урок и курс.
         /// </summary>
