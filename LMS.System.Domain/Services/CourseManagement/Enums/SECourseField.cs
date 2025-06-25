@@ -9,17 +9,17 @@ using LMS.System.Domain.Services.DBServices.Models;
 namespace LMS.System.Domain.Services.CourseManagement.Enums
 {
     /// <summary>
-    /// .
+    /// Smart Enum для полей курса.
     /// </summary>
     public abstract class SECourseField : SmartEnum<SECourseField, int>
     {
         /// <summary>
-        /// .
+        /// Заголовок курса , как вариант сортировки.
         /// </summary>
         public static readonly SECourseField Title = new TitleField();
 
         /// <summary>
-        /// .
+        /// Категория как вариант сортировки.
         /// </summary>
         public static readonly SECourseField Category = new CategoryField();
 
