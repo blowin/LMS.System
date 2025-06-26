@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LMS.System.Domain.Services.CourseManagement.CourseRequest;
 using LMS.System.Domain.Services.CourseManagement.CourseServices;
 using LMS.System.Domain.Services.CourseManagement.Enums;
 using LMS.System.Domain.Services.DBServices.Models;
@@ -18,11 +19,10 @@ namespace LMS.System.Domain.Services.CourseManagement.Interfaces
         /// <summary>
         /// Получение страницы курса.
         /// </summary>
-        /// <param name="courseField">Поля по которым будет производиться сортировка.</param>>
         /// <param name="request">Параметры страницы.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Ничего не возвращает.</returns>
-        Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(EVCourseField courseField, CoursePageRequest request, CancellationToken cancellationToken);
+        Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Получение курса по ID.
@@ -30,15 +30,15 @@ namespace LMS.System.Domain.Services.CourseManagement.Interfaces
         /// <param name="id">Айдишник курса.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращает курс по айдишнику.</returns>
-        Task<Course?> GetCourseByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<Course?> CourseByIdResponse(int id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Добавление курса.
         /// </summary>
-        /// <param name="course">Передаём курс.</param>
+        /// <param name="request">Передаём курс.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращаем сообщение.</returns>
-        Task<int> CreateCourseAsync(Course course, CancellationToken cancellationToken = default);
+        Task<int> CreateCourseAsync(CourseCreateRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Обновление курса.
@@ -46,7 +46,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Interfaces
         /// <param name="course">Передаём курс.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращаем сохранение изменений.</returns>
-        Task UpdateCourseAsync(Course course, CancellationToken cancellationToken = default);
+        Task UpdateCourseAsync(CourseUpdateRequest course, CancellationToken cancellationToken);
 
         /// <summary>
         /// Удаление курса.
@@ -54,7 +54,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Interfaces
         /// <param name="id">Айдишник курса.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращаем сохранение изменений.</returns>
-        Task DeleteCourseAsync(int id, CancellationToken cancellationToken = default);
+        Task DeleteCourseAsync(int id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Публикация курса.
@@ -62,7 +62,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Interfaces
         /// <param name="id">Айдишник курса.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращаем сохранение изменений.</returns>
-        Task PublishCourseAsync(int id, CancellationToken cancellationToken = default);
+        Task PublishCourseAsync(int id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Архивирование курса.
@@ -70,6 +70,6 @@ namespace LMS.System.Domain.Services.CourseManagement.Interfaces
         /// <param name="id">Айдишник курса.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращаем сохранение изменений.</returns>
-        Task ArchiveCourseAsync(int id, CancellationToken cancellationToken = default);
+        Task ArchiveCourseAsync(int id, CancellationToken cancellationToken);
     }
 }

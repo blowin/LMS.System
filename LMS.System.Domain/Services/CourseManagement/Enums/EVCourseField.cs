@@ -15,7 +15,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Enums
         /// <summary>
         /// Нулевое значение.
         /// </summary>
-        None = 0,
+        Id = 0,
 
         /// <summary>
         /// Название курса.

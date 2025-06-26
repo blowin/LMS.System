@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LMS.System.Domain.Services.CourseManagement.Enums;
 
 namespace LMS.System.Domain.Services.CourseManagement.CourseServices
 {
@@ -19,7 +20,7 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseServices
         /// <summary>
         /// Заголовок курса.
         /// </summary>
-        public required string Title { get; set; }
+        public string? Title { get; set; }
 
         /// <summary>
         /// Описание курса.

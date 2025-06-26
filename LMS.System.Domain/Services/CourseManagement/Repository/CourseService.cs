@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ardalis.SmartEnum;
+using FluentValidation;
+using LMS.System.Domain.Services.CourseManagement.CourseRequest;
 using LMS.System.Domain.Services.CourseManagement.CourseServices;
 using LMS.System.Domain.Services.CourseManagement.Enums;
 using LMS.System.Domain.Services.CourseManagement.Interfaces;
 using LMS.System.Domain.Services.CourseManagement.Page;
+using LMS.System.Domain.Services.CourseManagement.Validator;
 using LMS.System.Domain.Services.DBServices.DBContext;
 using LMS.System.Domain.Services.DBServices.Models;
 using Microsoft.EntityFrameworkCore;
@@ -34,61 +39,45 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <summary>
         /// Реализация метода получения страниц курсов.
         /// </summary>
-        /// <param name="courseField">Поле курса.</param>>
         /// <param name="request">Параметры фильтрации.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращаем страницы.</returns>
-        public async Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(EVCourseField courseField, CoursePageRequest request, CancellationToken cancellationToken)
+        public async Task<IPagedList<CoursePageResponse>> GetCoursePageAsync(CoursePageRequest request, CancellationToken cancellationToken)
         {
             var query = _context.Courses
                 .Include(c => c.Users)
                 .Include(c => c.Category)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(request.SearchTerm))
+            if (!string.IsNullOrWhiteSpace(request.SearchTerm))
             {
+                var searchTerm = request.SearchTerm.Trim();
                 query = query.Where(c =>
-                    c.Title.Contains(request.SearchTerm) ||
-                    c.Description.Contains(request.SearchTerm));
+                    c.Title.Contains(searchTerm) ||
+                    c.Description.Contains(searchTerm));
             }
 
-            if (request.SearchById > 0)
+            if (request.Id > 0)
             {
-                query = query.Where(c => c.Id == request.SearchById);
+                query = query.Where(c => c.Id == request.Id);
             }
 
-            if (!string.IsNullOrEmpty(request.SearchByCategoryName))
+            if (!string.IsNullOrWhiteSpace(request.CategoryName))
             {
+                var SearchByCategoryName = request.CategoryName.Trim();
                 query = query.Where(c =>
                     c.Category != null &&
-                    c.Category.Name.Contains(request.SearchByCategoryName));
+                    c.Category.Name.Contains(SearchByCategoryName));
             }
 
-            if (request.SearchByInstructorId > 0)
+            if (request.InstructorId > 0)
             {
                 query = query.Where(c =>
-                    c.InstructorId == request.SearchByInstructorId);
+                    c.InstructorId == request.InstructorId);
             }
 
-            if (courseField != EVCourseField.None)
-            {
-                if (courseField.HasFlag(EVCourseField.Title))
-                {
-                    query = request.SortDescending
-                        ? query.OrderByDescending(c => c.Title)
-                        : query.OrderBy(c => c.Title);
-                }
-                else if (courseField.HasFlag(EVCourseField.Category))
-                {
-                    query = request.SortDescending
-                        ? query.OrderByDescending(c => c.Category != null ? c.Category.Name : null)
-                        : query.OrderBy(c => c.Category != null ? c.Category.Name : null);
-                }
-            }
-            else
-            {
-                query = query.OrderBy(c => c.Id);
-            }
+            var sortField = SECourseField.FromValue((int)request.SortField) ?? SECourseField.Id;
+            query = sortField.OrderBy(query, request.SortType);
 
             var totalCount = await query.CountAsync(cancellationToken);
 
@@ -96,19 +85,19 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
                 .Select(c => new CoursePageResponse
                 {
                     Id = c.Id,
-                    Title = c.Title ?? "Без названия",
-                    Description = c.Description ?? "Описание отсутствует",
-                    CategoryName = c.Category != null ? c.Category.Name : "Без категории",
-                    InstructorName = c.Users != null && c.Users.FirstName != null && c.Users.LastName != null
-                        ? $"{c.Users.LastName} {c.Users.FirstName}"
-                        : "Неизвестный инструктор",
+                    Title = c.Title != null ? c.Title : null,
+                    Description = c.Description != null ? c.Description : null,
+                    CategoryName = c.Category != null ? c.Category.Name : null,
+                    InstructorName = c.Users != null
+                                    ? $"{c.Users.LastName} {c.Users.FirstName}".Trim()
+                                    : null
                 })
                 .ToListAsync(cancellationToken);
 
             return new PagedList<CoursePageResponse>(
                 items,
-                request.Page,
-                request.PageSize);
+                request.Page.PageCount,
+                request.Page.PageSize);
         }
 
         /// <summary>
@@ -117,7 +106,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <param name="id">ID курса.</param>
         /// <param name="cancellationToken">Токен отмены действия.</param>
         /// <returns>Возвращает найденный курс.</returns>
-        public async Task<Course?> GetCourseByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<Course?> CourseByIdResponse(int id, CancellationToken cancellationToken)
         {
             return await _context.Courses.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
         }
@@ -125,26 +114,88 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <summary>
         /// Создание курса.
         /// </summary>
-        /// <param name="course">Передаём курс.</param>
+        /// <param name="request">Передаём курс.</param>
         /// <param name="cancellationToken">Токен отмены.</param>
         /// <returns>Возвращаем ID созданного курса.</returns>
-        public async Task<int> CreateCourseAsync(Course course, CancellationToken cancellationToken)
+        public async Task<int> CreateCourseAsync(CourseCreateRequest request, CancellationToken cancellationToken)
         {
-            await _context.Courses.AddAsync(course, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-            return course.Id;
+            var validator = new CourseCreateRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+            var course = new Course
+            {
+                Title = request.Title,
+                Description = request.Description,
+                CategoryId = request.CategoryId,
+                InstructorId = request.InstructorId,
+            };
+            try
+            {
+                await _context.Courses.AddAsync(course, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+                return course.Id;
+            }
+            catch (DbException ex)
+            {
+                Trace.TraceError($"Error occurred: {ex}");
+                return 0;
+            }
         }
 
         /// <summary>
         /// Метод изменения курса.
         /// </summary>
-        /// <param name="course">Передаём курс.</param>
+        /// <param name="request">Передаём курс.</param>
         /// <param name="cancellationToken">Токуен отмены.</param>
         /// <returns>Возвращаем сохранение изменений.</returns>
-        public async Task UpdateCourseAsync(Course course, CancellationToken cancellationToken)
+        public async Task UpdateCourseAsync(CourseUpdateRequest request, CancellationToken cancellationToken)
         {
-            _context.Courses.Update(course);
-            await _context.SaveChangesAsync(cancellationToken);
+            var validator = new CourseUpdateRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessages = validationResult.Errors.Select(e => e.ErrorMessage);
+                throw new ValidationException(string.Join("\n", errorMessages));
+            }
+
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+
+            if (course == null)
+            {
+                throw new ArgumentException($"Course with ID {request.Id} not found", nameof(request.Id));
+            }
+
+            if (request.Title != null)
+            {
+                course.Title = request.Title;
+            }
+
+            if (request.Description != null)
+            {
+                course.Description = request.Description;
+            }
+
+            if (request.IsPublished.HasValue)
+            {
+                course.IsPublished = request.IsPublished.Value;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            catch
+            (DbUpdateException ex)
+            {
+                Trace.TraceError($"Error occurred: {ex}");
+                throw new InvalidOperationException("Update is faill. Check your data and try again.", ex);
+            }
         }
 
         /// <summary>
@@ -155,11 +206,24 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <returns>Ничего.</returns>
         public async Task DeleteCourseAsync(int id, CancellationToken cancellationToken)
         {
-            var course = await GetCourseByIdAsync(id, cancellationToken);
-            if (course != null)
+            bool exists = await _context.Courses
+                .AnyAsync(c => c.Id == id, cancellationToken);
+
+            if (!exists)
             {
-                _context.Courses.Remove(course);
-                await _context.SaveChangesAsync(cancellationToken);
+                throw new KeyNotFoundException($"Курс с ID {id} не найден");
+            }
+
+            try
+            {
+                await _context.Courses
+                      .Where(c => c.Id == id)
+                      .ExecuteDeleteAsync(cancellationToken);
+            }
+            catch (DbException ex)
+            {
+                Trace.TraceError($"Error occurred: {ex}");
+                throw new InvalidOperationException("Delete is faill. Check your data and try again.", ex);
             }
         }
 
@@ -171,11 +235,24 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <returns>Ничего не возвращаем.</returns>
         public async Task PublishCourseAsync(int id, CancellationToken cancellationToken)
         {
-            var course = await GetCourseByIdAsync(id, cancellationToken);
-            if (course != null)
+            bool exists = await _context.Courses
+                .AnyAsync(c => c.Id == id, cancellationToken);
+
+            if (!exists)
             {
-                course.IsPublished = true;
-                await _context.SaveChangesAsync(cancellationToken);
+                throw new KeyNotFoundException($"Курс с ID {id} не найден");
+            }
+
+            try
+            {
+                await _context.Courses
+                      .Where(c => c.Id == id)
+                      .ExecuteUpdateAsync(setter => setter.SetProperty(p => p.IsPublished, true), cancellationToken);
+            }
+            catch (DbException ex)
+            {
+                Trace.TraceError($"Error occurred: {ex}");
+                throw new InvalidOperationException("Publish is faill. Check your data and try again.", ex);
             }
         }
 
@@ -187,11 +264,24 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <returns>Ничего не возвращаем.</returns>
         public async Task ArchiveCourseAsync(int id, CancellationToken cancellationToken)
         {
-            var course = await GetCourseByIdAsync(id, cancellationToken);
-            if (course != null)
+            bool exists = await _context.Courses
+                           .AnyAsync(c => c.Id == id, cancellationToken);
+
+            if (!exists)
             {
-                course.IsArchive = true;
-                await _context.SaveChangesAsync(cancellationToken);
+                throw new KeyNotFoundException($"Курс с ID {id} не найден");
+            }
+
+            try
+            {
+                await _context.Courses
+                      .Where(c => c.Id == id)
+                      .ExecuteUpdateAsync(setter => setter.SetProperty(p => p.IsArchive, true), cancellationToken);
+            }
+            catch (DbException ex)
+            {
+                Trace.TraceError($"Error occurred: {ex}");
+                throw new InvalidOperationException("Archive is faill. Check your data and try again.", ex);
             }
         }
     }

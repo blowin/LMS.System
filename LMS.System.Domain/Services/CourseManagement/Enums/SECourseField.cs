@@ -14,6 +14,11 @@ namespace LMS.System.Domain.Services.CourseManagement.Enums
     public abstract class SECourseField : SmartEnum<SECourseField, int>
     {
         /// <summary>
+        /// Дефолтная сортировка по id.
+        /// </summary>
+        public static readonly SECourseField Id = new IdField();
+
+        /// <summary>
         /// Заголовок курса , как вариант сортировки.
         /// </summary>
         public static readonly SECourseField Title = new TitleField();
@@ -37,7 +42,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Enums
         /// </summary>
         /// <param name="value">Значение enum.</param>
         /// <returns>Интовое значение enum value.</returns>
-        public SECourseField FromEnum(EVCourseField value) => FromValue((int)value);
+        public static SECourseField FromEnum(EVCourseField value) => FromValue((int)value);
 
         /// <summary>
         /// Сортировка курса.
@@ -56,6 +61,17 @@ namespace LMS.System.Domain.Services.CourseManagement.Enums
 
             public override IQueryable<Course> OrderBy(IQueryable<Course> query, EVSortType sortType)
                 => sortType == EVSortType.Asc ? query.OrderBy(e => e.Title) : query.OrderByDescending(e => e.Title);
+        }
+
+        private sealed class IdField : SECourseField
+        {
+            public IdField()
+                : base(EVCourseField.Id)
+            {
+            }
+
+            public override IQueryable<Course> OrderBy(IQueryable<Course> query, EVSortType sortType)
+                => sortType == EVSortType.Asc ? query.OrderBy(e => e.Id) : query.OrderByDescending(e => e.Id);
         }
 
         private sealed class CategoryField : SECourseField

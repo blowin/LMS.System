@@ -23,14 +23,6 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
                 .HasMaxLength(255)
                 .HasColumnName("Title");
 
-            builder.Property(p => p.FilePDFPath)
-                .HasColumnName("FilePDFPath")
-                .HasMaxLength(512);
-
-            builder.Property(p => p.MoviesPath)
-                .HasColumnName("MoviesPath")
-                .HasMaxLength(512);
-
             builder.Property(p => p.Content)
                 .IsRequired()
                 .HasColumnName("Content")
