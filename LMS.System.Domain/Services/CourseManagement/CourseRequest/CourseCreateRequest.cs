@@ -22,7 +22,7 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseRequest
         public required string Description { get; set; }
 
         /// <summary>
-        /// Уникальный номер категории).
+        /// Уникальный номер категории.
         /// </summary>
         public int CategoryId { get; set; }
 
