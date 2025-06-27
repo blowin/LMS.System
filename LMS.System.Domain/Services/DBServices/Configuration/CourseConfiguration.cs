@@ -38,7 +38,12 @@ namespace LMS.System.Domain.Services.DBServices.Configuration
             builder.Property(p => p.IsPublished)
                 .IsRequired()
                 .HasColumnName("IsPubliched")
-                .HasDefaultValue(true);
+                .HasDefaultValue(false);
+
+            builder.Property(p => p.IsArchive)
+                .IsRequired()
+                .HasColumnName("IsArchive")
+                .HasDefaultValue(false);
 
             builder.HasMany(p => p.EnrollmentInCourse)
                 .WithOne(p => p.CoursesForEnrollment)
