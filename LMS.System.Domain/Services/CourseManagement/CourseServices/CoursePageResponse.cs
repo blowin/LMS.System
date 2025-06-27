@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LMS.System.Domain.Services.CourseManagement.Enums;
+using LMS.System.Domain.Services.DBServices.Models;
 
 namespace LMS.System.Domain.Services.CourseManagement.CourseServices
 {
@@ -30,11 +31,11 @@ namespace LMS.System.Domain.Services.CourseManagement.CourseServices
         /// <summary>
         /// Название категории к которому относится курс.
         /// </summary>
-        public required string CategoryName { get; set; }
+        public string? CategoryName { get; set; }
 
         /// <summary>
         /// Название категории к которому относится курс.
         /// </summary>
-        public required string InstructorName { get; set; }
+        public string? InstructorName { get; set; }
     }
 }

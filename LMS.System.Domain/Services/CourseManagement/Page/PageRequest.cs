@@ -27,7 +27,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Page
         /// <summary>
         /// Количество страниц. Должно быть не меньше 1.
         /// </summary>
-        public int PageCount
+        public int PageNumber
         {
             get => _pageCount;
             set => _pageCount = value >= 1

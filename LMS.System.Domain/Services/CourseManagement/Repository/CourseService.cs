@@ -88,16 +88,16 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
                     Title = c.Title != null ? c.Title : null,
                     Description = c.Description != null ? c.Description : null,
                     CategoryName = c.Category != null ? c.Category.Name : null,
-                    InstructorName = c.Users != null
-                                    ? $"{c.Users.LastName} {c.Users.FirstName}".Trim()
-                                    : null
+                    InstructorName = c.Users != null ? c.Users.FirstName : null,
                 })
                 .ToListAsync(cancellationToken);
 
-            return new PagedList<CoursePageResponse>(
-                items,
-                request.Page.PageCount,
-                request.Page.PageSize);
+            var pagedList = await items.ToPagedListAsync(
+                request.Page.PageNumber,
+                request.Page.PageSize,
+                cancellationToken);
+
+            return pagedList;
         }
 
         /// <summary>
