@@ -1,0 +1,120 @@
+﻿@page "/login"
+@using LMS.System.Domain.Services.DBServices.DBContext
+@using LMS.System.Domain.Services.DBServices.Models
+@using Microsoft.EntityFrameworkCore
+@inject IJwtService JwtService
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager Navigation
+@inject ApplicationContext DbContext
+
+<MudGrid Justify="Justify.Center" Style="height: 80vh;">
+    <MudItem xs="12" sm="8" md="6" lg="4">
+        <MudPaper Class="pa-6" Elevation="10">
+            <div class="text-center mb-6">
+                <MudAvatar Size="Size.Large" Color="Color.Primary" Class="mb-2">
+                    <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Large" />
+                </MudAvatar>
+                <MudText Typo="Typo.h5">Вход в систему</MudText>
+            </div>
+
+            <MudForm @ref="_form">
+                <MudTextField Label="Email"
+                              @bind-Value="Email"
+                              Required="true"
+                              RequiredError="Email обязателен"
+                              AdornmentIcon="@Icons.Material.Filled.Email"
+                              Variant="Variant.Outlined"
+                              FullWidth="true" />
+
+                <MudTextField Label="Пароль"
+                              @bind-Value="Password"
+                              Required="true"
+                              RequiredError="Пароль обязателен"
+                              AdornmentIcon="@Icons.Material.Filled.Password"
+                              InputType="InputType.Password"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Class="mt-4" />
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           FullWidth="true"
+                           Class="mt-4"
+                           OnClick="HandleLogin"
+                           Disabled="_isLoading">
+                    Войти
+                    @if (_isLoading)
+                    {
+                        <MudProgressCircular Color="Color.Default" Size="Size.Small" Class="ml-2" />
+                    }
+                </MudButton>
+
+                @if (!string.IsNullOrEmpty(_errorMessage))
+                {
+                    <MudAlert Severity="Severity.Error" Class="mt-4">@_errorMessage</MudAlert>
+                }
+            </MudForm>
+
+            <MudText Class="text-center mt-4">
+                Нет аккаунта? <MudLink Href="/register" Color="Color.Primary">Зарегистрироваться</MudLink>
+            </MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private MudForm? _form;
+    private bool _isLoading = false;
+    private string _errorMessage = string.Empty;
+    private string Email { get; set; } = string.Empty;
+    private string Password { get; set; } = string.Empty;
+
+    private async Task HandleLogin()
+    {
+        await _form!.Validate();
+        if (!_form.IsValid) return;
+
+        _isLoading = true;
+        _errorMessage = string.Empty;
+
+        try
+        {
+            var user = await DbContext.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email == Email);
+
+            if (user == null || !VerifyPassword(Password, user.PasswordHash))
+            {
+                _errorMessage = "Неверный email или пароль";
+                return;
+            }
+
+            var token = JwtService.GenerateToken(new GenerateTokenRequest
+            {
+                User = user,
+                Roles = new List<string> { user.Role.ToString() }
+            });
+
+            if (AuthProvider is CustomAuthStateProvider customProvider)
+            {
+                await customProvider.MarkUserAsAuthenticatedAsync(token);
+            }
+
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Ошибка входа: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private bool VerifyPassword(string password, string storedHash)
+    {
+        // Временная реализация - замените на BCrypt.Net.BCrypt.Verify(password, storedHash)
+        return password == storedHash;
+    }
+}

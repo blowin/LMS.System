@@ -14,7 +14,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Content Remove="Components\Auth\Component.razor" />
+      <Content Remove="Components\Auth\UserInfo.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="jose-jwt" Version="5.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.6" />
@@ -30,12 +36,10 @@
         </PackageReference>
     </ItemGroup>
 
-
     <ItemGroup>
         <PackageReference Include="MudBlazor" Version="8.*" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
     </ItemGroup>
-
 
     <ItemGroup>
           <ProjectReference Include="..\LMS.System.Domain\LMS.System.Domain.csproj" />

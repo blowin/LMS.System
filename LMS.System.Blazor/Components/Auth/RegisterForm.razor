@@ -1,0 +1,109 @@
+﻿@page "/register"
+@using LMS.System.Domain.Services.DBServices.DBContext
+@using LMS.System.Domain.Services.DBServices.Models
+@using LMS.System.Domain.Services.DBServices.Models.Enums
+@using Microsoft.EntityFrameworkCore
+@inject IJwtService JwtService
+@inject Microsoft.EntityFrameworkCore.DbContext DbContext
+@inject NavigationManager NavigationManager
+@inject ApplicationContext DbContext
+
+<MudGrid Justify="Justify.Center" Style="height: 100vh;">
+    <MudItem xs="12" sm="8" md="6" lg="4">
+        <MudPaper Class="pa-8" Elevation="10">
+            <MudText Typo="Typo.h4" Class="text-center mb-6">Регистрация</MudText>
+
+            <MudForm @ref="_form" @bind-IsValid="_isValid" @bind-Errors="_errors">
+                <MudTextField @bind-Value="FirstName"
+                              Label="Имя"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Required="true"
+                              RequiredError="Введите имя" />
+
+                <MudTextField @bind-Value="LastName"
+                              Label="Фамилия"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Class="mt-4" />
+
+                <MudTextField @bind-Value="Email"
+                              Label="Email"
+                              Variant="Variant.Outlined"
+                              FullWidth="true"
+                              Required="true"
+                              RequiredError="Введите email"
+                              Class="mt-4" />
+
+                <MudTextField @bind-Value="Password"
+                              Label="Пароль"
+                              Variant="Variant.Outlined"
+                              InputType="InputType.Password"
+                              FullWidth="true"
+                              Required="true"
+                              RequiredError="Введите пароль"
+                              Class="mt-4" />
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           FullWidth="true"
+                           Class="mt-6"
+                           OnClick="HandleRegister">
+                    Зарегистрироваться
+                </MudButton>
+            </MudForm>
+
+            <MudText Class="text-center mt-4">
+                Уже есть аккаунт? <MudLink Href="/login">Войти</MudLink>
+            </MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private MudForm? _form;
+    private bool _isValid;
+    private string[] _errors = Array.Empty<string>();
+
+    private string FirstName { get; set; } = string.Empty;
+    private string LastName { get; set; } = string.Empty;
+    private string Email { get; set; } = string.Empty;
+    private string Password { get; set; } = string.Empty;
+
+    private async Task HandleRegister()
+    {
+        if (_form == null) return;
+
+        await _form.Validate();
+        if (!_isValid) return;
+
+        // Проверка, что email не занят
+        if (await DbContext.Set<User>().AnyAsync(u => u.Email == Email))
+        {
+            _errors = new[] { "Этот email уже зарегистрирован" };
+            await _form.Validate();
+            return;
+        }
+
+        // Создание нового пользователя
+        var user = new User
+        {
+            FirstName = FirstName,
+            LastName = LastName,
+            Email = Email,
+            PasswordHash = HashPassword(Password),
+            Role = EVRole.Student
+        };
+
+        await DbContext.Set<User>().AddAsync(user);
+        await DbContext.SaveChangesAsync();
+
+        NavigationManager.NavigateTo("/login");
+    }
+
+    private string HashPassword(string password)
+    {
+        // Временная реализация 
+        return password; // Заменить на реальное хеширование!
+    }
+}

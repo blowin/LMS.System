@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -10,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace LMS.System.Domain.Services.Auth;
 
 /// <summary>
-/// Service for generating JWT tokens.
+/// Service for generating and validating JWT tokens.
 /// </summary>
 public class JwtService : IJwtService
 {
@@ -26,44 +24,47 @@ public class JwtService : IJwtService
     }
 
     /// <summary>
-    /// Generates JWT token for specified user with roles.
+    /// Generates a JWT token with default expiration time.
     /// </summary>
-    /// <param name="user">User for whom to generate token.</param>
-    /// <param name="roles">Roles assigned to the user.</param>
-    /// <returns>Generated JWT token as string.</returns>
-    public string GenerateToken(User user, IList<string> roles)
+    /// <param name="request">Token generation request.</param>
+    /// <returns>Generated JWT token.</returns>
+    public string GenerateToken(GenerateTokenRequest request)
     {
-        if (user == null)
-        {
-            throw new ArgumentNullException(nameof(user));
-        }
+        return GenerateToken(request, DateTime.UtcNow.AddMinutes(_settings.ExpiryInMinutes));
+    }
 
-        if (roles == null)
-        {
-            throw new ArgumentNullException(nameof(roles));
-        }
+    /// <summary>
+    /// Generates a JWT token with specific expiration time.
+    /// </summary>
+    /// <param name="request">Token generation request.</param>
+    /// <param name="expirationTime">Token expiration time.</param>
+    /// <returns>Generated JWT token.</returns>
+    public string GenerateToken(GenerateTokenRequest request, DateTime expirationTime)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(request.User);
+        ArgumentNullException.ThrowIfNull(request.Roles);
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Email, user.Email),
-            new(ClaimTypes.GivenName, $"{user.FirstName} {user.LastName}"), // Используем FirstName+LastName вместо UserName
+            new(JwtRegisteredClaimNames.Sub, request.User.Id.ToString()),
+            new(JwtRegisteredClaimNames.Email, request.User.Email),
+            new(ClaimTypes.Name, $"{request.User.FirstName} {request.User.LastName}"),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        foreach (var role in roles)
-        {
-            claims.Add(new(ClaimTypes.Role, role));
-        }
+        claims.AddRange(request.Roles.Select(role =>
+            new Claim(ClaimTypes.Role, role)));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
-        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
             issuer: _settings.Issuer,
             audience: _settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_settings.ExpiryInMinutes),
-            signingCredentials: credentials);
+            expires: expirationTime,
+            signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

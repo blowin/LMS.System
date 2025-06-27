@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 namespace LMS.System.Domain.Services.Auth;
 
 /// <summary>
-/// .
+/// Настройки JWT-аутентификации.
 /// </summary>
 public class JwtSettings
 {
     /// <summary>
     /// .
     /// </summary>
-    public string Key { get; set; } = null!;
+    public required string Key { get; set; }
 
     /// <summary>
-    /// .
+    /// Издатель токена.
     /// </summary>
-    public string Issuer { get; set; } = null!;
+    public required string Issuer { get; set; }
 
     /// <summary>
-    /// .
+    /// Аудитория токена.
     /// </summary>
-    public string Audience { get; set; } = null!;
+    public required string Audience { get; set; }
 
     /// <summary>
-    /// .
+    /// Время жизни токена в минутах.
     /// </summary>
-    public int ExpiryInMinutes { get; set; }
+    public required int ExpiryInMinutes { get; set; }
 }
