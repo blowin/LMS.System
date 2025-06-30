@@ -6,7 +6,7 @@ using LMS.System.Domain.Services.DBServices.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 
-namespace LMS.System.Test;
+namespace LMS.System.Test.Units;
 
 public class CourseServiceTest
 {
@@ -91,7 +91,7 @@ public class CourseServiceTest
         }
     }
 
-    //Тестирование изменения поля IsPublish.
+    //Тестирование изменения поля IsArchive.
     [Fact]
     public async Task ChangeFieldIsArchiveCourse_ShouldChangeIsArchiveFromFalseToTrueCourse()
     {
