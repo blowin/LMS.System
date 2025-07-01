@@ -2,6 +2,7 @@ using FluentAssertions;
 using FluentValidation;
 using LMS.System.Domain.Services.CourseManagement.Repository;
 using LMS.System.Domain.Services.DBServices.DBContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace LMS.System.Test.Units;
 
@@ -12,8 +13,8 @@ public class CourseServiceTest
     {
         //Arrange
 
-        using var mockDbContext = TestDbContextFactory.Create<ApplicationContext>();
-        var service = new CourseService(mockDbContext);
+        using var DbContext = TestDbContextFactory.Create<ApplicationContext>();
+        var service = new CourseService(DbContext);
 
         var user = TestData.TestData.GetValidUser();
 
@@ -21,10 +22,10 @@ public class CourseServiceTest
 
         var course = TestData.TestData.GetValidCourseCreateRequest();
 
-        mockDbContext.Categories.Add(category);
-        mockDbContext.Users.Add(user);
-        mockDbContext.SaveChanges();
-        mockDbContext.ChangeTracker.Clear();
+        DbContext.Categories.Add(category);
+        DbContext.Users.Add(user);
+        DbContext.SaveChanges();
+        DbContext.ChangeTracker.Clear();
 
         //Act
 
@@ -32,7 +33,7 @@ public class CourseServiceTest
 
         //Assert
 
-        var AddedCourse = mockDbContext.Courses.FirstOrDefault(p => p.Id == courseId);
+        var AddedCourse = DbContext.Courses.FirstOrDefault(p => p.Id == courseId);
         Assert.NotNull(AddedCourse);
         Assert.Equal("Заголовок", AddedCourse.Title);
     }
@@ -42,8 +43,8 @@ public class CourseServiceTest
     {
         //Arrange
 
-        using var mockDbContext = TestDbContextFactory.Create<ApplicationContext>();
-        var service = new CourseService(mockDbContext);
+        using var DbContext = TestDbContextFactory.Create<ApplicationContext>();
+        var service = new CourseService(DbContext);
 
         var user = TestData.TestData.GetValidUser();
 
@@ -51,11 +52,11 @@ public class CourseServiceTest
 
         var course = TestData.TestData.GetValidCourseCreateRequest();
 
-        mockDbContext.Categories.Add(category);
-        mockDbContext.Users.Add(user);
+        DbContext.Categories.Add(category);
+        DbContext.Users.Add(user);
         var courseId = await service.CreateCourseAsync(course, default);
-        mockDbContext.SaveChanges();
-        mockDbContext.ChangeTracker.Clear();
+        DbContext.SaveChanges();
+        DbContext.ChangeTracker.Clear();
 
         //Act
 
@@ -63,9 +64,37 @@ public class CourseServiceTest
 
         //Assert
 
-        var addedCourse = mockDbContext.Courses.FirstOrDefault(c => c.Id == courseId);
+        var addedCourse = DbContext.Courses.FirstOrDefault(c => c.Id == courseId);
         Assert.NotNull(addedCourse);
         Assert.Equal("Заголовок", addedCourse.Title);
         Assert.True(addedCourse.IsPublished);
+    }
+
+    [Fact]
+    public async Task ChangeArchiveField_Throws_FieldBecameTrue()
+    {
+        //Arrange
+        using var DbContext = TestDbContextFactory.Create<ApplicationContext>();
+        var service = new CourseService(DbContext);
+
+        var user = TestData.TestData.GetValidUser();
+        var category = TestData.TestData.GetValidCategory();
+        var course = TestData.TestData.GetValidCourseCreateRequest();
+
+        DbContext.Categories.Add(category);
+        DbContext.Users.Add(user);
+        var courseId = await service.CreateCourseAsync(course, default);
+        DbContext.SaveChanges();
+        DbContext.ChangeTracker.Clear();
+
+        //Act
+        await service.ArchiveCourseAsync(courseId, default);
+
+        //Assert
+
+        var addedCourse = DbContext.Courses.FirstOrDefault(c => c.Id == courseId);
+        Assert.NotNull(addedCourse);
+        Assert.Equal("Заголовок", addedCourse.Title);
+        Assert.True(addedCourse.IsArchive);
     }
 }
