@@ -97,4 +97,29 @@ public class CourseServiceTest
         Assert.Equal("Заголовок", addedCourse.Title);
         Assert.True(addedCourse.IsArchive);
     }
+
+    [Fact]
+    public async Task RemoveCourse_Throws_CourseWillBeenRemove()
+    {
+        //Arrange
+        using var DbContext = TestDbContextFactory.Create<ApplicationContext>();
+        var service = new CourseService(DbContext);
+
+        var user = TestData.TestData.GetValidUser();
+        var category = TestData.TestData.GetValidCategory();
+        var course = TestData.TestData.GetValidCourseCreateRequest();
+
+        DbContext.Categories.Add(category);
+        DbContext.Users.Add(user);
+        var courseId = await service.CreateCourseAsync(course, default);
+        DbContext.SaveChanges();
+        DbContext.ChangeTracker.Clear();
+
+        //Act
+        await service.DeleteCourseAsync(courseId, default);
+
+        //Assert
+        var result = DbContext.Courses.Any();
+        Assert.False(result);
+    }
 }
