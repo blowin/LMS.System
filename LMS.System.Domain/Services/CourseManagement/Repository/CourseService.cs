@@ -109,6 +109,7 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
         /// <returns>Возвращает найденный курс.</returns>
         public async Task<Course?> CourseByIdResponse(int id, CancellationToken cancellationToken)
         {
+            // сделать исключение если по id не существует курса
             return await _context.Courses.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
         }
 

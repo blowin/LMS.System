@@ -122,4 +122,30 @@ public class CourseServiceTest
         var result = DbContext.Courses.Any();
         Assert.False(result);
     }
+
+    [Fact]
+    public async Task CourseSearchById_Throws_CourseWillBeFound()
+    {
+        //Arrange
+        using var DbContext = TestDbContextFactory.Create<ApplicationContext>();
+        var service = new CourseService(DbContext);
+
+        var user = TestData.TestData.GetValidUser();
+        var category = TestData.TestData.GetValidCategory();
+        var course = TestData.TestData.GetValidCourseCreateRequest();
+
+        DbContext.Categories.Add(category);
+        DbContext.Users.Add(user);
+        var courseId = await service.CreateCourseAsync(course, default);
+        DbContext.SaveChanges();
+        DbContext.ChangeTracker.Clear();
+
+        //Act
+        var result = await service.CourseByIdResponse(courseId, default);
+
+        //Assert
+        Assert.NotNull(result);
+        Assert.True(result.Id == courseId);
+    }
+
 }

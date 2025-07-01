@@ -47,7 +47,7 @@ namespace LMS.System.Test.TestData
         {
             return new CourseCreateRequest
             {
-                Title = null ,
+                Title = null,
                 Description = "Desc",
                 CategoryId = 1,
                 InstructorId = 1
