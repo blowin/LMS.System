@@ -2,6 +2,7 @@
 @using LMS.System.Domain.Services.DBServices.DBContext
 @using LMS.System.Domain.Services.DBServices.Models
 @using Microsoft.EntityFrameworkCore
+@using BCrypt.Net
 @inject IJwtService JwtService
 @inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager Navigation
@@ -71,7 +72,9 @@
 
     private async Task HandleLogin()
     {
-        await _form!.Validate();
+        if (_form is null) return;
+
+        await _form.Validate();
         if (!_form.IsValid) return;
 
         _isLoading = true;
@@ -83,17 +86,25 @@
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == Email);
 
-            if (user == null || !VerifyPassword(Password, user.PasswordHash))
+            if (user is null || string.IsNullOrEmpty(user.PasswordHash))
             {
                 _errorMessage = "Неверный email или пароль";
                 return;
             }
 
-            var token = JwtService.GenerateToken(new GenerateTokenRequest
+            if (!BCrypt.Verify(Password, user.PasswordHash))
+            {
+                _errorMessage = "Неверный email или пароль";
+                return;
+            }
+
+            var tokenRequest = new GenerateTokenRequest
             {
                 User = user,
                 Roles = new List<string> { user.Role.ToString() }
-            });
+            };
+
+            var token = JwtService.GenerateToken(tokenRequest);
 
             if (AuthProvider is CustomAuthStateProvider customProvider)
             {
@@ -110,11 +121,5 @@
         {
             _isLoading = false;
         }
-    }
-
-    private bool VerifyPassword(string password, string storedHash)
-    {
-        // Временная реализация - замените на BCrypt.Net.BCrypt.Verify(password, storedHash)
-        return password == storedHash;
     }
 }

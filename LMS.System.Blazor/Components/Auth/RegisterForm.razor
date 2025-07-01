@@ -3,8 +3,8 @@
 @using LMS.System.Domain.Services.DBServices.Models
 @using LMS.System.Domain.Services.DBServices.Models.Enums
 @using Microsoft.EntityFrameworkCore
+@using BCrypt.Net
 @inject IJwtService JwtService
-@inject Microsoft.EntityFrameworkCore.DbContext DbContext
 @inject NavigationManager NavigationManager
 @inject ApplicationContext DbContext
 
@@ -44,12 +44,31 @@
                               RequiredError="Введите пароль"
                               Class="mt-4" />
 
+                <MudTextField @bind-Value="ConfirmPassword"
+                              Label="Подтверждение пароля"
+                              Variant="Variant.Outlined"
+                              InputType="InputType.Password"
+                              FullWidth="true"
+                              Required="true"
+                              RequiredError="Подтвердите пароль"
+                              Class="mt-4" />
+
+                @if (!string.IsNullOrEmpty(_errorMessage))
+                {
+                    <MudAlert Severity="Severity.Error" Class="mt-4">@_errorMessage</MudAlert>
+                }
+
                 <MudButton Variant="Variant.Filled"
                            Color="Color.Primary"
                            FullWidth="true"
                            Class="mt-6"
-                           OnClick="HandleRegister">
+                           OnClick="HandleRegister"
+                           Disabled="_isLoading">
                     Зарегистрироваться
+                    @if (_isLoading)
+                    {
+                        <MudProgressCircular Color="Color.Default" Size="Size.Small" Class="ml-2" />
+                    }
                 </MudButton>
             </MudForm>
 
@@ -63,47 +82,64 @@
 @code {
     private MudForm? _form;
     private bool _isValid;
+    private bool _isLoading = false;
     private string[] _errors = Array.Empty<string>();
+    private string _errorMessage = string.Empty;
 
     private string FirstName { get; set; } = string.Empty;
     private string LastName { get; set; } = string.Empty;
     private string Email { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
+    private string ConfirmPassword { get; set; } = string.Empty;
 
     private async Task HandleRegister()
     {
-        if (_form == null) return;
+        if (_form is null) return;
 
         await _form.Validate();
         if (!_isValid) return;
 
-        // Проверка, что email не занят
-        if (await DbContext.Set<User>().AnyAsync(u => u.Email == Email))
+        if (Password != ConfirmPassword)
         {
-            _errors = new[] { "Этот email уже зарегистрирован" };
-            await _form.Validate();
+            _errorMessage = "Пароли не совпадают";
             return;
         }
 
-        // Создание нового пользователя
-        var user = new User
+        _isLoading = true;
+        _errorMessage = string.Empty;
+
+        try
         {
-            FirstName = FirstName,
-            LastName = LastName,
-            Email = Email,
-            PasswordHash = HashPassword(Password),
-            Role = EVRole.Student
-        };
+            // Проверка, что email не занят
+            if (await DbContext.Users.AnyAsync(u => u.Email == Email))
+            {
+                _errorMessage = "Этот email уже зарегистрирован";
+                return;
+            }
 
-        await DbContext.Set<User>().AddAsync(user);
-        await DbContext.SaveChangesAsync();
+            // Создание нового пользователя
+            var user = new User
+            {
+                FirstName = FirstName,
+                LastName = LastName,
+                Email = Email,
+                PasswordHash = BCrypt.HashPassword(Password), 
+                Role = EVRole.Student,
+                CreatedAt = DateTime.UtcNow
+            };
+            
+            await DbContext.Users.AddAsync(user);
+            await DbContext.SaveChangesAsync();
 
-        NavigationManager.NavigateTo("/login");
-    }
-
-    private string HashPassword(string password)
-    {
-        // Временная реализация 
-        return password; // Заменить на реальное хеширование!
+            NavigationManager.NavigateTo("/login");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Ошибка регистрации: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
     }
 }

@@ -1,9 +1,36 @@
-﻿<MudNavMenu>
+﻿@using global::System.Security.Claims
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+
+<MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
     <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
-
     <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Weather</MudNavLink>
 
-    <MudNavLink Href="/login" Icon="@Icons.Material.Filled.Login">Login</MudNavLink>
-  
+    @if (context.User.Identity?.IsAuthenticated != true)
+    {
+        <MudNavLink Href="/login" Icon="@Icons.Material.Filled.Login">Login</MudNavLink>
+    }
+    else
+    {
+        // ничего не происходит
+    }
 </MudNavMenu>
+
+@code {
+    private AuthenticationState context = new(new ClaimsPrincipal());
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+
+    private async Task Logout()
+    {
+        if (AuthStateProvider is CustomAuthStateProvider customProvider)
+        {
+            await customProvider.MarkUserAsLoggedOutAsync();
+        }
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+}
