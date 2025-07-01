@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ardalis.SmartEnum;
 using FluentValidation;
 using LMS.System.Domain.Services.CourseManagement.CourseRequest;
 using LMS.System.Domain.Services.CourseManagement.CourseServices;
 using LMS.System.Domain.Services.CourseManagement.Enums;
 using LMS.System.Domain.Services.CourseManagement.Interfaces;
-using LMS.System.Domain.Services.CourseManagement.Page;
 using LMS.System.Domain.Services.CourseManagement.Validator;
 using LMS.System.Domain.Services.DBServices.DBContext;
 using LMS.System.Domain.Services.DBServices.Models;
@@ -61,6 +54,10 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
             {
                 query = query.Where(c => c.Id == request.Id);
             }
+            else
+            {
+                throw new ArgumentException("Некорректное значение", nameof(request.Id));
+            }
 
             if (!string.IsNullOrWhiteSpace(request.CategoryName))
             {
@@ -74,6 +71,10 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
             {
                 query = query.Where(c =>
                     c.InstructorId == request.InstructorId);
+            }
+            else
+            {
+                throw new ArgumentException("Некорректное значение", nameof(request.Id));
             }
 
             var sortField = SECourseField.FromValue((int)request.SortField) ?? SECourseField.Id;
