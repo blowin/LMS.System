@@ -13,10 +13,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Services\Auth\CustomAuthStateProvider.cs" />
+      <Compile Remove="Services\AccountManagers\Auth\CustomAuthStateProvider.cs" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />

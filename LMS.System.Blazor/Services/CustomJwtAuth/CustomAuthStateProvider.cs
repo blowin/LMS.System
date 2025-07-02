@@ -1,9 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using LMS.System.Domain.Services.AccountManagers.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
-namespace LMS.System.Domain.Services.Auth;
+namespace LMS.System.Blazor.Services.CustomJwtAuth;
 
 /// <summary>
 /// Provides authentication state management for Blazor Server applications using JWT tokens.
@@ -76,7 +77,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     /// </summary>
     /// <param name="token">The JWT token to parse.</param>
     /// <returns>The created authentication state.</returns>
-    private AuthenticationState CreateAuthenticationState(string token)
+    private static AuthenticationState CreateAuthenticationState(string token)
     {
         try
         {

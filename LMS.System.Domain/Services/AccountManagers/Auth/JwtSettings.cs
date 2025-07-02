@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LMS.System.Domain.Services.Auth;
+namespace LMS.System.Domain.Services.AccountManagers.Auth;
 
 /// <summary>
 /// Настройки JWT-аутентификации.
@@ -12,7 +12,7 @@ namespace LMS.System.Domain.Services.Auth;
 public class JwtSettings
 {
     /// <summary>
-    /// .
+    /// Ключ для подписи JWT токенов.
     /// </summary>
     public required string Key { get; set; }
 

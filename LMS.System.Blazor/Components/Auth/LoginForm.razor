@@ -1,8 +1,11 @@
 ﻿@page "/login"
+@using BCrypt.Net
+@using LMS.System.Blazor.Services
+@using LMS.System.Blazor.Services.CustomJwtAuth
+@using LMS.System.Domain.Services.AccountManagers.Auth
 @using LMS.System.Domain.Services.DBServices.DBContext
 @using LMS.System.Domain.Services.DBServices.Models
 @using Microsoft.EntityFrameworkCore
-@using BCrypt.Net
 @inject IJwtService JwtService
 @inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager Navigation

@@ -1,7 +1,8 @@
 using System.Text;
 using LMS.System.Blazor;
 using LMS.System.Blazor.Components;
-using LMS.System.Domain.Services.Auth;
+using LMS.System.Blazor.Services.CustomJwtAuth;
+using LMS.System.Domain.Services.AccountManagers.Auth;
 using LMS.System.Domain.Services.DBServices.DBContext;
 using LMS.System.Migrations.MSSQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,11 +18,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Configure JWT
-var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()
+// Get JWT configuration section once
+var jwtConfigurationSection = builder.Configuration.GetSection("Jwt");
+var jwtSettings = jwtConfigurationSection.Get<JwtSettings>()
     ?? throw new InvalidOperationException("JWT configuration not found");
 
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+// Configure JWT using the saved section
+builder.Services.Configure<JwtSettings>(jwtConfigurationSection);
 
 // Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -42,6 +45,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Authorization
 builder.Services.AddAuthorization();
+
+builder.Services.AddSingleton<Microsoft.Extensions.Internal.ISystemClock, Microsoft.Extensions.Internal.SystemClock>();
 
 // Custom services
 builder.Services.AddScoped<IJwtService, JwtService>();
