@@ -33,6 +33,11 @@ namespace LMS.System.Domain.Services.DBServices.Models
         public bool IsPublished { get; set; }
 
         /// <summary>
+        /// Поле хранящее статус курса ахривировано/нет.
+        /// </summary>
+        public bool IsArchive { get; set; }
+
+        /// <summary>
         /// Навигационное свойство для юзера.
         /// </summary>
         public User? Users { get; set; }
