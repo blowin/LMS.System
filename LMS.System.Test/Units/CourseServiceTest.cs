@@ -376,7 +376,7 @@ public class CourseServiceTest
     }
 
     [Fact]
-    public async Task GetCoursePageAsyncWithSortingByCategoryTitleSearchTermDesc_ExpectedResult_FirstCourseWillBeRussianForChilds()
+    public async Task GetCoursePageAsyncWithSortingByCategoryTitleSearchTermDesc_ExpectedResult_FirstCourseWillBeRussianorChilds()
     {
         //Arrange
         using var DbContext = TestDbContextFactory.Create<ApplicationContext>();
@@ -388,7 +388,7 @@ public class CourseServiceTest
 
         foreach (var category in categories)
         {
-           await DbContext.Categories.AddAsync(category);
+            await DbContext.Categories.AddAsync(category);
         }
 
         DbContext.Users.Add(user);
