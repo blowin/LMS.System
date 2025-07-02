@@ -1,13 +1,12 @@
 ﻿@page "/register"
-@using LMS.System.Domain.Services.AccountManagers.Auth
-@using LMS.System.Domain.Services.DBServices.DBContext
-@using LMS.System.Domain.Services.DBServices.Models
-@using LMS.System.Domain.Services.DBServices.Models.Enums
-@using Microsoft.EntityFrameworkCore
 @using BCrypt.Net
-@inject IJwtService JwtService
+@using LMS.System.Domain.Services.DBServices.Models;
+@using LMS.System.Domain.Services.DBServices.Models.Enums;
+@using LMS.System.Domain.Services.UserManager
+@using Microsoft.Extensions.Internal
+@inject IUserService UserService
 @inject NavigationManager NavigationManager
-@inject ApplicationContext DbContext
+@inject ISystemClock SystemClock
 
 <MudGrid Justify="Justify.Center" Style="height: 100vh;">
     <MudItem xs="12" sm="8" md="6" lg="4">
@@ -111,27 +110,23 @@
 
         try
         {
-            // Проверка, что email не занят
-            if (await DbContext.Users.AnyAsync(u => u.Email == Email))
+            if (await UserService.IsEmailTakenAsync(Email))
             {
                 _errorMessage = "Этот email уже зарегистрирован";
                 return;
             }
 
-            // Создание нового пользователя
             var user = new User
             {
                 FirstName = FirstName,
                 LastName = LastName,
                 Email = Email,
-                PasswordHash = BCrypt.HashPassword(Password), 
+                PasswordHash = BCrypt.HashPassword(Password),
                 Role = EVRole.Student,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = SystemClock.UtcNow.UtcDateTime
             };
-            
-            await DbContext.Users.AddAsync(user);
-            await DbContext.SaveChangesAsync();
 
+            await UserService.CreateUserAsync(user);
             NavigationManager.NavigateTo("/login");
         }
         catch (Exception ex)

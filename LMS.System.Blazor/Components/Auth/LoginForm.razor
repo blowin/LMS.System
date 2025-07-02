@@ -2,14 +2,13 @@
 @using BCrypt.Net
 @using LMS.System.Blazor.Services
 @using LMS.System.Blazor.Services.CustomJwtAuth
-@using LMS.System.Domain.Services.AccountManagers.Auth
-@using LMS.System.Domain.Services.DBServices.DBContext
-@using LMS.System.Domain.Services.DBServices.Models
-@using Microsoft.EntityFrameworkCore
+@using LMS.System.Domain.Services.UserManager
+@using Microsoft.Extensions.Internal
 @inject IJwtService JwtService
+@inject IUserService UserService
 @inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager Navigation
-@inject ApplicationContext DbContext
+@inject ISystemClock SystemClock
 
 <MudGrid Justify="Justify.Center" Style="height: 80vh;">
     <MudItem xs="12" sm="8" md="6" lg="4">
@@ -85,26 +84,18 @@
 
         try
         {
-            var user = await DbContext.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email == Email);
-
-            if (user is null || string.IsNullOrEmpty(user.PasswordHash))
+            var isValid = await UserService.ValidateCredentialsAsync(Email, Password);
+            if (!isValid)
             {
                 _errorMessage = "Неверный email или пароль";
                 return;
             }
 
-            if (!BCrypt.Verify(Password, user.PasswordHash))
-            {
-                _errorMessage = "Неверный email или пароль";
-                return;
-            }
-
+            var user = await UserService.GetUserByEmailAsync(Email);
             var tokenRequest = new GenerateTokenRequest
             {
-                User = user,
-                Roles = new List<string> { user.Role.ToString() }
+                User = user!,
+                Roles = new List<string> { user!.Role.ToString() }
             };
 
             var token = JwtService.GenerateToken(tokenRequest);
