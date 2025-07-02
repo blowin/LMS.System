@@ -54,10 +54,6 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
             {
                 query = query.Where(c => c.Id == request.Id);
             }
-            else
-            {
-                throw new ArgumentException("Некорректное значение", nameof(request.Id));
-            }
 
             if (!string.IsNullOrWhiteSpace(request.CategoryName))
             {
@@ -71,10 +67,6 @@ namespace LMS.System.Domain.Services.CourseManagement.Repository
             {
                 query = query.Where(c =>
                     c.InstructorId == request.InstructorId);
-            }
-            else
-            {
-                throw new ArgumentException("Некорректное значение", nameof(request.Id));
             }
 
             var sortField = SECourseField.FromValue((int)request.SortField) ?? SECourseField.Id;

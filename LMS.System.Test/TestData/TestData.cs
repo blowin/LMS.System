@@ -43,14 +43,42 @@ namespace LMS.System.Test.TestData
             };
         }
 
-        public static CourseCreateRequest GetBadValidCourseCreateRequest()
+        public static List<CourseCreateRequest> GetValidListCourseCreateRequest()
         {
-            return new CourseCreateRequest
+            return new List<CourseCreateRequest>
             {
-                Title = null,
-                Description = "Desc",
-                CategoryId = 1,
-                InstructorId = 1
+                new (){ Title = "C# Basics", Description = "Learn C#" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "C# Advanced level", Description = "Learn C#" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "Python basics" , Description = "Learn python" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "C++ basics" , Description = "Learn C++" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "Haskel basics" , Description = "Learn Haskel" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "Assembler basics" , Description = "Learn Assembler" , CategoryId = 1 , InstructorId = 1 }
+            };
+        }
+
+        public static List<CourseCreateRequest> GetValidListCourseCreateRequestWithDifferentCategory()
+        {
+            return new List<CourseCreateRequest>
+            {
+                new (){ Title = "C# basics", Description = "Learn C#" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "Russian for childs", Description = "Learn Russian language" , CategoryId = 3 , InstructorId = 1 },
+                new (){ Title = "C# Advanced level", Description = "Learn C#" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "Python basics" , Description = "Learn python" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "English for teenagers", Description = "Learn English language" , CategoryId = 3 , InstructorId = 1 },
+                new (){ Title = "C++ basics" , Description = "Learn C++" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "Haskel basics" , Description = "Learn Haskel" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "Assembler basics" , Description = "Learn Assembler" , CategoryId = 1 , InstructorId = 1 },
+                new (){ Title = "Advanced math", Description = "Learn C#" , CategoryId = 2 , InstructorId = 1 },
+            };
+        }
+
+        public static List<Category> GetValidListCategory()
+        {
+            return new List<Category>
+            {
+                new(){ Name = "IT" },
+                new(){ Name = "Math" },
+                new(){ Name = "Languages" },
             };
         }
     }
