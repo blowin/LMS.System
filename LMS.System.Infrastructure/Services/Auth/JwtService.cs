@@ -1,15 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using LMS.System.Domain.Services.AccountManagers.Auth;
 using LMS.System.Domain.Services.DBServices.Models;
+using LMS.System.Infrastructure.Configs.Auth;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace LMS.System.Domain.Services.AccountManagers.Auth;
+namespace LMS.System.Infrastructure.Services.Auth;
 
 /// <summary>
-/// Сервис для генерации и валидации JWT токенов.
+/// Сервис для генерации JWT токенов.
 /// </summary>
 public class JwtService : IJwtService
 {
@@ -27,32 +29,44 @@ public class JwtService : IJwtService
         _systemClock = systemClock;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Генерирует JWT токен для пользователя.
+    /// </summary>
+    /// <param name="request">Запрос на генерацию токена.</param>
+    /// <returns>Сгенерированный токен.</returns>
     public string GenerateToken(GenerateTokenRequest request)
     {
-        if (request?.User == null || request.Roles == null)
+        if (request == null)
         {
             throw new ArgumentNullException(nameof(request));
         }
 
+        if (request.User == null)
+        {
+            throw new ArgumentNullException(nameof(request.User));
+        }
+
+        if (request.Roles == null)
+        {
+            throw new ArgumentNullException(nameof(request.Roles));
+        }
+
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, request.User.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, request.User.Email),
-            new(ClaimTypes.Name, $"{request.User.FirstName} {request.User.LastName}"),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Sub, request.User.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, request.User.Email),
+            new Claim(ClaimTypes.Name, $"{request.User.FirstName} {request.User.LastName}"),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
         claims.AddRange(request.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-        var expirationTime = _systemClock.UtcNow.AddMinutes(_settings.ExpiryInMinutes);
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
         var token = new JwtSecurityToken(
             issuer: _settings.Issuer,
             audience: _settings.Audience,
             claims: claims,
-            expires: expirationTime.UtcDateTime,
+            expires: _systemClock.UtcNow.AddMinutes(_settings.ExpiryInMinutes).UtcDateTime,
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 
         return new JwtSecurityTokenHandler().WriteToken(token);

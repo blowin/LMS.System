@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LMS.System.Domain.Services.AccountManagers.Auth;
+namespace LMS.System.Infrastructure.Configs.Auth;
 
 /// <summary>
 /// Настройки JWT-аутентификации.

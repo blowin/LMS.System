@@ -5,6 +5,8 @@ using LMS.System.Blazor.Services.CustomJwtAuth;
 using LMS.System.Domain.Services.AccountManagers.Auth;
 using LMS.System.Domain.Services.DBServices.DBContext;
 using LMS.System.Domain.Services.UserManager;
+using LMS.System.Infrastructure.Configs.Auth;
+using LMS.System.Infrastructure.Services.Auth;
 using LMS.System.Migrations.MSSQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -26,6 +28,8 @@ var jwtSettings = jwtConfigurationSection.Get<JwtSettings>()
 
 // Configure JWT using the saved section
 builder.Services.Configure<JwtSettings>(jwtConfigurationSection);
+
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 // Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
